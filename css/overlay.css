@@ -150,7 +150,7 @@ body.overlay-mode {
   text-transform: uppercase;
   color: var(--text-main);
   white-space: nowrap;
-  max-width: 170px;
+  max-width: 280px;
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1.15;
@@ -479,13 +479,14 @@ body.overlay-mode {
 }
 .theme-retro .game-title {
   font-family: 'Press Start 2P', monospace;
-  font-size: 9px;
+  font-size: 8px;
   color: #facc15;
   line-height: 1.3;
+  max-width: 260px;
 }
 .theme-retro .char-name {
   font-family: 'Press Start 2P', monospace;
-  font-size: 8px;
+  font-size: 7.5px;
   color: #ef4444;
 }
 .theme-retro .counter-value {
@@ -601,21 +602,30 @@ body.overlay-mode {
 
 /* 3. Kompakt Rozet (Compact Pill) */
 .layout-compact .card-top-tag {
-  display: none !important; /* Kompakt hap şeklinde rozet gizlenir, metinler ferah kalır */
+  top: -10px;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  padding: 1px 10px;
+  border-radius: 12px;
+}
+.layout-compact .tag-pulse {
+  width: 5px;
+  height: 5px;
 }
 .layout-compact .death-card {
-  padding: 6px 14px 6px 8px;
+  padding: 11px 16px 7px 10px;
   gap: 10px;
   border-radius: 30px;
 }
 .layout-compact .avatar-container {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
 }
 .layout-compact .game-title {
   font-size: 12px;
-  max-width: 120px;
+  max-width: 240px;
   line-height: 1.15;
 }
 .layout-compact .char-name {
@@ -627,7 +637,7 @@ body.overlay-mode {
   min-width: 36px;
 }
 .layout-compact .counter-value {
-  font-size: 26px;
+  font-size: 28px;
 }
 
 /* 4. Boss Bar Düzeni (Boss) */
