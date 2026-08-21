@@ -195,6 +195,7 @@ body.overlay-mode {
   color: #ef4444;
   text-shadow: 0 2px 4px rgba(0,0,0,0.8);
   pointer-events: none;
+  z-index: 12;
   animation: floatUp 0.85s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
@@ -204,6 +205,92 @@ body.overlay-mode {
   75% { opacity: 1; transform: translateY(-16px) scale(1); }
   100% { opacity: 0; transform: translateY(-28px) scale(0.85); }
 }
+
+/* ================= KURU KAFA PATLAMA & BUHAR (POF) EFEKTİ ================= */
+.skull-burst-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  pointer-events: none;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.skull-burst-icon {
+  width: 30px;
+  height: 30px;
+  fill: var(--accent);
+  filter: drop-shadow(0 0 10px var(--accent));
+  animation: skullZoomBurst 0.75s cubic-bezier(0.12, 0.9, 0.2, 1) forwards;
+}
+
+@keyframes skullZoomBurst {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+    filter: drop-shadow(0 0 4px var(--accent)) blur(0px);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.7) translateY(-3px);
+    filter: drop-shadow(0 0 14px var(--accent)) blur(0px);
+  }
+  70% {
+    opacity: 0.85;
+    transform: scale(2.3) translateY(-6px);
+    filter: drop-shadow(0 0 20px var(--accent)) blur(2px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(3.1) translateY(-12px);
+    filter: drop-shadow(0 0 25px var(--accent)) blur(6px);
+  }
+}
+
+.smoke-ring {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2.5px solid var(--accent);
+  opacity: 0;
+  animation: smokeRingBurst 0.7s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+@keyframes smokeRingBurst {
+  0% { transform: scale(0.2); opacity: 0.95; border-width: 3px; filter: blur(0px); }
+  50% { opacity: 0.7; border-width: 2px; filter: blur(1.5px); }
+  100% { transform: scale(3.6); opacity: 0; border-width: 1px; filter: blur(5px); }
+}
+
+.smoke-puff {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, var(--accent) 70%, transparent 100%);
+  opacity: 0;
+  filter: blur(2px);
+}
+
+.smoke-puff.p1 { animation: puffDir1 0.75s ease-out forwards; }
+.smoke-puff.p2 { animation: puffDir2 0.75s ease-out forwards; }
+.smoke-puff.p3 { animation: puffDir3 0.75s ease-out forwards; }
+.smoke-puff.p4 { animation: puffDir4 0.75s ease-out forwards; }
+.smoke-puff.p5 { animation: puffDir5 0.75s ease-out forwards; }
+.smoke-puff.p6 { animation: puffDir6 0.75s ease-out forwards; }
+
+@keyframes puffDir1 { 0% { transform: translate(0,0) scale(0.4); opacity: 0.9; } 100% { transform: translate(-24px, -18px) scale(2.2); opacity: 0; filter: blur(6px); } }
+@keyframes puffDir2 { 0% { transform: translate(0,0) scale(0.4); opacity: 0.9; } 100% { transform: translate(24px, -18px) scale(2.2); opacity: 0; filter: blur(6px); } }
+@keyframes puffDir3 { 0% { transform: translate(0,0) scale(0.4); opacity: 0.9; } 100% { transform: translate(-28px, 6px) scale(2.0); opacity: 0; filter: blur(6px); } }
+@keyframes puffDir4 { 0% { transform: translate(0,0) scale(0.4); opacity: 0.9; } 100% { transform: translate(28px, 6px) scale(2.0); opacity: 0; filter: blur(6px); } }
+@keyframes puffDir5 { 0% { transform: translate(0,0) scale(0.4); opacity: 0.9; } 100% { transform: translate(-14px, -28px) scale(2.4); opacity: 0; filter: blur(7px); } }
+@keyframes puffDir6 { 0% { transform: translate(0,0) scale(0.4); opacity: 0.9; } 100% { transform: translate(14px, -28px) scale(2.4); opacity: 0; filter: blur(7px); } }
 
 /* ================= 6 PREMİUM TEMA ================= */
 
