@@ -1,6 +1,6 @@
 /**
  * OBS Ölüm Sayacı - Senkronizasyon Motoru (SyncEngine)
- * Çoklu Cihaz (PC + Telefon + OBS) Çakışma ve Sıfırlanma Korumalı
+ * Kesintisiz Çift Kanallı (MQTT Bulut + BroadcastChannel Yerel + Kalıcı Hafıza)
  */
 
 class SyncEngine {
@@ -16,6 +16,7 @@ class SyncEngine {
         this.broadcastChannel = null;
         this.mqttClient = null;
         this.isConnectedMqtt = false;
+        this.heartbeatTimer = null;
         this.storageKey = `stream_dc_state_${this.roomId}`;
 
         // Varsayılan Temiz Durum
@@ -52,7 +53,7 @@ class SyncEngine {
         // 1. LocalStorage'dan mevcut durumu yükle
         this.loadLocalState();
 
-        // 2. BroadcastChannel'ı başlat (Aynı PC / OBS için 0ms)
+        // 2. BroadcastChannel'ı başlat (Aynı PC / OBS için 0ms gecikme)
         if (typeof BroadcastChannel !== 'undefined') {
             try {
                 this.broadcastChannel = new BroadcastChannel(`death_counter_bc_${this.roomId}`);
@@ -81,6 +82,9 @@ class SyncEngine {
 
         // 4. MQTT WebSockets Bulut Bağlantısı (Telefon & Netlify için)
         this.initMqtt();
+
+        // 5. Kalp Atışı ve Otomatik Yeniden Bağlanma (Heartbeat)
+        this.startHeartbeat();
     }
 
     loadLocalState() {
@@ -137,8 +141,9 @@ class SyncEngine {
 
     connectMqtt() {
         if (typeof mqtt === 'undefined') return;
+        if (this.mqttClient && this.isConnectedMqtt) return;
 
-        const topic = `death_counter_room_v6/${this.roomId}`;
+        const topic = `stream_death_counter_room/${this.roomId}`;
         const clientId = `dc_${Math.random().toString(16).substr(2, 8)}`;
         
         const brokers = [
@@ -157,11 +162,16 @@ class SyncEngine {
             const brokerUrl = brokers[currentBrokerIndex];
 
             try {
+                if (this.mqttClient) {
+                    try { this.mqttClient.end(true); } catch(e) {}
+                }
+
                 this.mqttClient = mqtt.connect(brokerUrl, {
                     clientId: clientId,
                     clean: true,
-                    connectTimeout: 4000,
-                    reconnectPeriod: 3000
+                    connectTimeout: 5000,
+                    reconnectPeriod: 2500,
+                    keepalive: 30
                 });
 
                 this.mqttClient.on('connect', () => {
@@ -170,7 +180,7 @@ class SyncEngine {
 
                     this.mqttClient.subscribe(topic, { qos: 0 }, (err) => {
                         if (!err) {
-                            // Yeni bağlanan her cihaz (telefon/sekme) mevcut oturumun durumunu talep eder
+                            // Yeni bağlanan her istemci aktif oturumun durumunu talep eder
                             this.sendMessage({ type: 'REQUEST_STATE' });
                         }
                     });
@@ -184,9 +194,9 @@ class SyncEngine {
                 });
 
                 this.mqttClient.on('error', () => {
-                    this.mqttClient.end();
+                    this.isConnectedMqtt = false;
                     currentBrokerIndex++;
-                    tryConnect();
+                    setTimeout(tryConnect, 1000);
                 });
 
                 this.mqttClient.on('close', () => {
@@ -195,11 +205,20 @@ class SyncEngine {
 
             } catch (err) {
                 currentBrokerIndex++;
-                tryConnect();
+                setTimeout(tryConnect, 1000);
             }
         };
 
         tryConnect();
+    }
+
+    startHeartbeat() {
+        if (this.heartbeatTimer) clearInterval(this.heartbeatTimer);
+        this.heartbeatTimer = setInterval(() => {
+            if (!this.isConnectedMqtt) {
+                this.connectMqtt();
+            }
+        }, 8000);
     }
 
     sendMessage(payload) {
@@ -216,7 +235,7 @@ class SyncEngine {
 
         // 2. MQTT (Uzak cihazlar & Telefon)
         if (this.mqttClient && this.isConnectedMqtt) {
-            const topic = `death_counter_room_v6/${this.roomId}`;
+            const topic = `stream_death_counter_room/${this.roomId}`;
             try {
                 this.mqttClient.publish(topic, JSON.stringify(payload));
             } catch (e) {}
@@ -343,7 +362,7 @@ class SyncEngine {
             };
         }
         if (this.mqttClient && this.isConnectedMqtt) {
-            this.mqttClient.subscribe(`death_counter_room_v6/${this.roomId}`);
+            this.mqttClient.subscribe(`stream_death_counter_room/${this.roomId}`);
             this.sendMessage({ type: 'REQUEST_STATE' });
         }
         this.onStateChange(this.state, 'room_change');
