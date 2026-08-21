@@ -27,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Oyun & Görsel Formları
     const gameTitleInput = document.getElementById('gameTitleInput');
     const charNameInput = document.getElementById('charNameInput');
-    const counterLabelInput = document.getElementById('counterLabelInput');
     const fileUploadInput = document.getElementById('fileUploadInput');
     const avatarUploadArea = document.getElementById('avatarUploadArea');
     const previewThumb = document.getElementById('previewThumb');
@@ -46,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const previewAvatar = document.getElementById('previewAvatar');
     const previewGameTitle = document.getElementById('previewGameTitle');
     const previewCharName = document.getElementById('previewCharName');
-    const previewCounterLabel = document.getElementById('previewCounterLabel');
     const previewCounterVal = document.getElementById('previewCounterVal');
 
     // Modallar
@@ -97,9 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (document.activeElement !== charNameInput) {
             charNameInput.value = state.characterName || '';
         }
-        if (document.activeElement !== counterLabelInput) {
-            counterLabelInput.value = state.counterLabel || 'ÖLÜM SAYISI';
-        }
         if (previewThumb && state.avatarUrl) {
             previewThumb.src = state.avatarUrl;
         }
@@ -126,7 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         previewGameTitle.textContent = state.gameTitle || 'OYUN ADI';
         previewCharName.textContent = state.characterName || '';
-        previewCounterLabel.textContent = state.counterLabel || 'ÖLÜM';
         previewCounterVal.textContent = state.deaths || 0;
 
         if (state.avatarUrl) {
@@ -252,10 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     charNameInput.addEventListener('input', (e) => {
         sync.updateState({ characterName: e.target.value.toUpperCase() });
-    });
-
-    counterLabelInput.addEventListener('input', (e) => {
-        sync.updateState({ counterLabel: e.target.value.toUpperCase() });
     });
 
     // ================= GÖRSEL YÜKLEME (PC'DEN) =================

@@ -21,13 +21,12 @@ class SyncEngine {
         // Varsayılan Temiz Durum
         this.state = {
             gameTitle: 'ELDEN RING',
-            characterName: 'TARNISHED',
+            characterName: 'BARLASTV',
             deaths: 0,
             avatarUrl: 'assets/presets/elden_ring.svg',
             theme: 'souls',
             layout: 'horizontal',
             accentColor: '#ef4444',
-            counterLabel: 'ÖLÜM SAYISI',
             shakeEffect: true,
             flashEffect: true,
             particlesEnabled: true,
