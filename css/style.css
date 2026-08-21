@@ -182,12 +182,11 @@ body {
 }
 
 .counter-giant {
-  font-family: 'Teko', sans-serif;
-  font-size: 80px;
-  line-height: 0.85;
-  font-weight: 700;
+  font-family: 'Outfit', -apple-system, sans-serif;
+  font-size: 68px;
+  line-height: 1;
+  font-weight: 900;
   color: #ffffff;
-  text-shadow: 0 0 25px rgba(239, 68, 68, 0.65);
   transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 

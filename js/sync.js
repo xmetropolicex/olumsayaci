@@ -29,10 +29,10 @@ class SyncEngine {
             accentColor: '#e63946',
             glowColor: 'rgba(230, 57, 70, 0.6)',
             counterLabel: 'ÖLÜM SAYISI',
-            soundEnabled: true,
-            soundEffect: 'souls_death',
-            shakeEffect: true,
-            particlesEnabled: true,
+            soundEnabled: false,
+            soundEffect: 'none',
+            shakeEffect: false,
+            particlesEnabled: false,
             scale: 100,
             updatedAt: Date.now()
         };

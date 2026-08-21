@@ -1,21 +1,19 @@
 /* ==========================================================================
    OBS ÖLÜM SAYACI (DEATH COUNTER) - OVERLAY STILLERI
-   OBS Browser Source için Şeffaf, Yüksek Çözünürlüklü ve Animasyonlu Tasarımlar
+   Net, Şık, Glowsuz ve Kristal Okunabilir Kart Tasarımı
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Outfit:wght@400;600;800;900&family=Press+Start+2P&family=Rajdhani:wght@600;700;900&family=Teko:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Outfit:wght@400;600;700;800;900&family=Press+Start+2P&family=Rajdhani:wght@600;700;900&family=Teko:wght@600;700&display=swap');
 
 :root {
   --accent: #ef4444;
-  --accent-glow: rgba(239, 68, 68, 0.6);
-  --card-bg: rgba(15, 17, 26, 0.88);
-  --card-border: rgba(239, 68, 68, 0.4);
+  --card-bg: rgba(14, 18, 27, 0.94);
+  --card-border: rgba(239, 68, 68, 0.6);
   --text-main: #ffffff;
   --text-muted: #94a3b8;
   --scale-factor: 1;
 }
 
-/* Sadece OBS Overlay sayfasındayken body'i şeffaf ve sabit yap */
 body.overlay-mode {
   background-color: transparent !important;
   font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -26,7 +24,7 @@ body.overlay-mode {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  padding: 20px;
+  padding: 16px;
   user-select: none;
 }
 
@@ -47,23 +45,20 @@ body.overlay-mode {
   padding: 10px 18px 10px 12px;
   background: var(--card-bg);
   border: 2px solid var(--card-border);
-  border-radius: 14px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px var(--accent-glow);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  transition: all 0.2s ease-out;
 }
 
 /* ================= GÖRSEL & AVATAR ALANI ================= */
 .avatar-container {
   position: relative;
-  width: 58px;
-  height: 58px;
+  width: 54px;
+  height: 54px;
   border-radius: 10px;
   overflow: hidden;
   flex-shrink: 0;
   border: 2px solid var(--accent);
-  box-shadow: 0 0 12px var(--accent-glow);
   background: #090a0f;
   display: flex;
   align-items: center;
@@ -83,11 +78,10 @@ body.overlay-mode {
   right: 0px;
   background: var(--accent);
   color: #fff;
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 900;
   padding: 1px 4px;
   border-radius: 4px 0 0 0;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.6);
 }
 
 /* ================= OYUN & BİLGİ ALANI ================= */
@@ -95,7 +89,7 @@ body.overlay-mode {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-width: 110px;
+  min-width: 100px;
 }
 
 .game-title {
@@ -105,18 +99,17 @@ body.overlay-mode {
   text-transform: uppercase;
   color: var(--text-main);
   white-space: nowrap;
-  max-width: 170px;
+  max-width: 160px;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
 }
 
 .char-name {
-  font-size: 10px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
   color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.5px;
   margin-top: 1px;
 }
 
@@ -124,23 +117,12 @@ body.overlay-mode {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  margin-top: 3px;
+  margin-top: 2px;
   font-size: 10px;
   font-weight: 800;
   color: var(--accent);
-  letter-spacing: 0.8px;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
-}
-
-.label-pill::before {
-  content: '';
-  display: inline-block;
-  width: 5px;
-  height: 5px;
-  background: var(--accent);
-  border-radius: 50%;
-  box-shadow: 0 0 6px var(--accent);
-  animation: pulse-dot 1.5s infinite alternate;
 }
 
 /* ================= ÖLÜM SAYACI BÖLÜMÜ ================= */
@@ -150,309 +132,229 @@ body.overlay-mode {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-left: 12px;
-  border-left: 1.5px solid rgba(255, 255, 255, 0.12);
-  min-width: 60px;
-}
-
-.skull-icon {
-  width: 16px;
-  height: 16px;
-  fill: var(--accent);
-  filter: drop-shadow(0 0 6px var(--accent-glow));
-  margin-bottom: -2px;
+  padding-left: 14px;
+  border-left: 1.5px solid rgba(255, 255, 255, 0.15);
+  min-width: 50px;
 }
 
 .counter-value {
-  font-family: 'Teko', sans-serif;
-  font-size: 46px;
-  line-height: 0.95;
-  font-weight: 700;
+  font-family: 'Outfit', -apple-system, sans-serif;
+  font-size: 38px;
+  line-height: 1;
+  font-weight: 900;
   color: #ffffff;
-  text-shadow: 0 0 16px var(--accent-glow), 0 2px 4px rgba(0,0,0,0.9);
   transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* ================= YÜZEN PARÇACIK (FLOATING +1) ================= */
+/* ================= YÜZEN PARÇACIK ================= */
 .floating-delta {
   position: absolute;
-  top: -10px;
+  top: -12px;
   right: -8px;
   font-family: 'Outfit', sans-serif;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 900;
-  color: #ff4757;
-  text-shadow: 0 0 10px rgba(255, 71, 87, 0.9), 0 2px 4px #000;
+  color: #ef4444;
   pointer-events: none;
-  animation: floatUp 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  animation: floatUp 0.9s ease-out forwards;
 }
 
 @keyframes floatUp {
-  0% { opacity: 0; transform: translateY(8px) scale(0.6); }
-  20% { opacity: 1; transform: translateY(-4px) scale(1.25); }
-  70% { opacity: 0.9; transform: translateY(-22px) scale(1); }
-  100% { opacity: 0; transform: translateY(-40px) scale(0.8); }
+  0% { opacity: 0; transform: translateY(6px); }
+  20% { opacity: 1; transform: translateY(-2px); }
+  80% { opacity: 1; transform: translateY(-16px); }
+  100% { opacity: 0; transform: translateY(-26px); }
 }
 
 /* ================= TEMALAR ================= */
 
-/* 1. DARK SOULS / BLOOD RED TEMA */
+/* 1. DARK SOULS / BLOOD RED */
 .theme-souls {
-  --accent: #e63946;
-  --accent-glow: rgba(230, 57, 70, 0.7);
-  --card-bg: linear-gradient(135deg, rgba(20, 5, 5, 0.92) 0%, rgba(10, 2, 2, 0.96) 100%);
-  --card-border: #8b0000;
-  font-family: 'Cinzel', serif;
+  --accent: #ef4444;
+  --card-bg: #140909;
+  --card-border: #991b1b;
 }
 .theme-souls .death-card {
-  border: 2px solid #8b0000;
-  border-image: linear-gradient(to right, #ff4d4d, #4a0000, #ff4d4d) 1;
-  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.9), 0 0 25px rgba(230, 57, 70, 0.5);
+  border: 2px solid #dc2626;
 }
 .theme-souls .game-title {
   font-family: 'Cinzel', serif;
-  letter-spacing: 1.5px;
-  color: #f1faee;
+  letter-spacing: 1px;
 }
 .theme-souls .counter-value {
-  font-family: 'Cinzel', serif;
-  font-size: 36px;
-  color: #ff4d4d;
+  color: #ef4444;
 }
 
-/* 2. CYBERPUNK NEON TEMA */
+/* 2. CYBERPUNK */
 .theme-cyberpunk {
   --accent: #00f3ff;
-  --accent-glow: rgba(0, 243, 255, 0.8);
-  --card-bg: linear-gradient(135deg, rgba(13, 2, 33, 0.94) 0%, rgba(6, 11, 25, 0.96) 100%);
-  --card-border: #ff007f;
-  font-family: 'Rajdhani', sans-serif;
+  --card-bg: #0b0f19;
+  --card-border: #00f3ff;
 }
 .theme-cyberpunk .death-card {
   border-radius: 4px;
   border: 2px solid #00f3ff;
-  box-shadow: 0 0 15px rgba(0, 243, 255, 0.5), inset 0 0 15px rgba(255, 0, 127, 0.2);
-  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
-}
-.theme-cyberpunk .avatar-container {
-  border-radius: 4px;
-  border-color: #ff007f;
-  box-shadow: 0 0 12px rgba(255, 0, 127, 0.7);
 }
 .theme-cyberpunk .game-title {
   font-family: 'Rajdhani', sans-serif;
-  letter-spacing: 2px;
   color: #00f3ff;
 }
 .theme-cyberpunk .counter-value {
   font-family: 'Rajdhani', sans-serif;
   font-weight: 900;
-  font-size: 40px;
   color: #ff007f;
-  text-shadow: 0 0 15px #ff007f;
 }
 
-/* 3. MODERN GLASSMORPHISM TEMA */
+/* 3. MODERN GLASS */
 .theme-glass {
-  --accent: #6366f1;
-  --accent-glow: rgba(99, 102, 241, 0.5);
-  --card-bg: rgba(255, 255, 255, 0.08);
-  --card-border: rgba(255, 255, 255, 0.18);
-  font-family: 'Outfit', sans-serif;
+  --accent: #818cf8;
+  --card-bg: rgba(20, 24, 38, 0.92);
+  --card-border: rgba(255, 255, 255, 0.2);
 }
 .theme-glass .death-card {
-  border-radius: 18px;
-  border: 1.5px solid rgba(255, 255, 255, 0.22);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), 0 0 20px rgba(99, 102, 241, 0.3);
+  border-radius: 14px;
 }
 .theme-glass .counter-value {
   color: #ffffff;
-  font-family: 'Outfit', sans-serif;
-  font-size: 36px;
-  font-weight: 900;
 }
 
-/* 4. RETRO 8-BIT ARCADE TEMA */
+/* 4. RETRO 8-BIT */
 .theme-retro {
-  --accent: #eab308;
-  --accent-glow: rgba(234, 179, 8, 0.6);
+  --accent: #facc15;
   --card-bg: #18181b;
   --card-border: #facc15;
-  font-family: 'Press Start 2P', monospace;
 }
 .theme-retro .death-card {
   border-radius: 0;
   border: 3px solid #facc15;
-  box-shadow: 5px 5px 0px #000000;
-  image-rendering: pixelated;
-  padding: 8px 14px;
+  padding: 8px 12px;
 }
 .theme-retro .avatar-container {
   border-radius: 0;
   border: 2px solid #facc15;
-  box-shadow: none;
 }
 .theme-retro .game-title {
   font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
+  font-size: 9px;
   color: #facc15;
 }
 .theme-retro .char-name {
   font-family: 'Press Start 2P', monospace;
-  font-size: 8px;
-  color: #a1a1aa;
+  font-size: 7px;
 }
 .theme-retro .counter-value {
   font-family: 'Press Start 2P', monospace;
-  font-size: 24px;
+  font-size: 20px;
   color: #ef4444;
 }
 
-/* 5. ESPORTS PRO / VALORANT TEMA */
+/* 5. ESPORTS PRO / VALORANT */
 .theme-esports {
   --accent: #ff4655;
-  --accent-glow: rgba(255, 70, 85, 0.7);
   --card-bg: #0f1923;
   --card-border: #ff4655;
-  font-family: 'Rajdhani', sans-serif;
 }
 .theme-esports .death-card {
   border-radius: 2px;
-  border-left: 5px solid #ff4655;
-  border-right: 1.5px solid rgba(255, 70, 85, 0.4);
+  border-left: 4px solid #ff4655;
+  border-right: 1px solid rgba(255, 70, 85, 0.4);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.8), 0 0 15px rgba(255, 70, 85, 0.3);
 }
 .theme-esports .game-title {
   font-family: 'Rajdhani', sans-serif;
-  font-weight: 900;
-  font-size: 16px;
-  color: #ece8e1;
+  color: #ffffff;
 }
 .theme-esports .counter-value {
-  font-family: 'Teko', sans-serif;
-  font-size: 48px;
   color: #ff4655;
 }
 
-/* 6. MIDNIGHT GOLD TEMA */
+/* 6. MIDNIGHT GOLD */
 .theme-gold {
   --accent: #fbbf24;
-  --accent-glow: rgba(251, 191, 36, 0.6);
-  --card-bg: linear-gradient(135deg, #1c1917 0%, #0c0a09 100%);
+  --card-bg: #14120e;
   --card-border: #d97706;
-  font-family: 'Cinzel', serif;
 }
 .theme-gold .death-card {
   border: 2px solid #fbbf24;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 20px rgba(251, 191, 36, 0.4);
 }
 .theme-gold .game-title {
   color: #fef3c7;
 }
 .theme-gold .counter-value {
   color: #fbbf24;
-  text-shadow: 0 0 15px rgba(251, 191, 36, 0.7);
 }
 
-/* ================= DÜZENLER (LAYOUTS) ================= */
+/* ================= DÜZENLER ================= */
 
-/* Dikey Kart (Vertical) */
+/* Dikey Kart */
 .layout-vertical .death-card {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 16px 20px;
-  gap: 10px;
-  min-width: 160px;
+  padding: 14px 18px;
+  gap: 8px;
+  min-width: 140px;
 }
 .layout-vertical .avatar-container {
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
 }
 .layout-vertical .info-section {
   align-items: center;
 }
 .layout-vertical .counter-section {
   border-left: none;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.15);
   padding-left: 0;
-  padding-top: 8px;
+  padding-top: 6px;
   width: 100%;
 }
 
-/* Kompakt Rozet (Compact Pill) */
+/* Kompakt Rozet */
 .layout-compact .death-card {
-  padding: 5px 12px 5px 6px;
+  padding: 4px 10px 4px 6px;
   gap: 8px;
-  border-radius: 40px;
+  border-radius: 30px;
 }
 .layout-compact .avatar-container {
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
 }
 .layout-compact .game-title {
-  font-size: 12px;
-  max-width: 110px;
+  font-size: 11px;
+  max-width: 100px;
 }
 .layout-compact .char-name,
 .layout-compact .label-pill {
   display: none;
 }
 .layout-compact .counter-section {
-  padding-left: 8px;
+  padding-left: 6px;
 }
 .layout-compact .counter-value {
-  font-size: 28px;
+  font-size: 24px;
 }
 
 /* ================= ANİMASYONLAR ================= */
-@keyframes pulse-dot {
-  0% { transform: scale(0.8); opacity: 0.6; }
-  100% { transform: scale(1.3); opacity: 1; }
-}
-
 .pop-anim {
-  animation: deathPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: deathPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 @keyframes deathPop {
   0% { transform: scale(1); }
-  40% { transform: scale(1.35); filter: drop-shadow(0 0 20px var(--accent)); }
+  40% { transform: scale(1.25); }
   100% { transform: scale(1); }
 }
 
 .shake-anim {
-  animation: cardShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  animation: cardShake 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 
 @keyframes cardShake {
-  10%, 90% { transform: translate3d(-2px, 0, 0); }
-  20%, 80% { transform: translate3d(4px, 0, 0); }
-  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-  40%, 60% { transform: translate3d(4px, 0, 0); }
-}
-
-.death-flash-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  background: radial-gradient(circle, transparent 40%, rgba(239, 68, 68, 0.4) 100%);
-  opacity: 0;
-  transition: opacity 0.1s ease;
-  z-index: 9999;
-}
-.death-flash-active {
-  opacity: 1;
-  animation: flashFade 0.5s ease-out forwards;
-}
-
-@keyframes flashFade {
-  0% { opacity: 0.8; }
-  100% { opacity: 0; }
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+  40%, 60% { transform: translate3d(3px, 0, 0); }
 }
