@@ -1,12 +1,11 @@
 /**
  * OBS Ölüm Sayacı - Hibrit Senkronizasyon Motoru (SyncEngine)
- * 1. BroadcastChannel (Aynı PC / OBS için 0ms gecikmeli yerel bağlantı)
- * 2. LocalStorage (Anında durum kaydı ve sekme arası yedek)
- * 3. MQTT WebSockets (Netlify / Telefon / Uzaktan kontrol için global bulut senkronizasyonu)
+ * Döngü (Loop) korumalı, anlık yerel & bulut senkronizasyonu
  */
 
 class SyncEngine {
     constructor(options = {}) {
+        this.instanceId = 'inst_' + Math.random().toString(36).substr(2, 9);
         this.roomId = options.roomId || this.getRoomIdFromUrl() || 'yayin-oda-1';
         this.isHost = options.isHost || false;
         this.onStateChange = options.onStateChange || (() => {});
@@ -18,20 +17,18 @@ class SyncEngine {
         this.isConnectedMqtt = false;
         this.storageKey = `stream_dc_state_${this.roomId}`;
 
-        // Default initial state
+        // Varsayılan Temiz Durum
         this.state = {
             gameTitle: 'ELDEN RING',
-            characterName: 'Tarnished',
+            characterName: 'TARNISHED',
             deaths: 0,
             avatarUrl: 'assets/presets/elden_ring.svg',
             theme: 'souls', // souls, cyberpunk, glass, retro, esports, gold
-            layout: 'horizontal', // horizontal, vertical, compact, boss
-            accentColor: '#e63946',
-            glowColor: 'rgba(230, 57, 70, 0.6)',
+            layout: 'horizontal', // horizontal, vertical, compact
+            accentColor: '#ef4444',
             counterLabel: 'ÖLÜM SAYISI',
             shakeEffect: false,
             particlesEnabled: false,
-            scale: 100,
             updatedAt: Date.now()
         };
 
@@ -44,10 +41,10 @@ class SyncEngine {
     }
 
     init() {
-        // 1. LocalStorage'dan son durumu yükle
+        // 1. LocalStorage'dan mevcut durumu yükle
         this.loadLocalState();
 
-        // 2. BroadcastChannel'ı başlat (Yerel OBS & Tarayıcılar için)
+        // 2. BroadcastChannel'ı başlat (Aynı tarayıcı / OBS için)
         if (typeof BroadcastChannel !== 'undefined') {
             try {
                 this.broadcastChannel = new BroadcastChannel(`death_counter_bc_${this.roomId}`);
@@ -59,17 +56,23 @@ class SyncEngine {
             }
         }
 
-        // 3. Storage Event Dinleyicisi
+        // 3. Storage Event (Sekmeler arası)
         window.addEventListener('storage', (e) => {
             if (e.key === this.storageKey && e.newValue) {
                 try {
                     const parsed = JSON.parse(e.newValue);
-                    this.handleIncomingMessage({ type: 'STATE_UPDATE', state: parsed }, 'storage');
+                    if (parsed && parsed.updatedAt > this.state.updatedAt) {
+                        this.handleIncomingMessage({
+                            type: 'STATE_UPDATE',
+                            state: parsed,
+                            instanceId: 'storage'
+                        }, 'storage');
+                    }
                 } catch (err) {}
             }
         });
 
-        // 4. MQTT WebSockets Bulut Bağlantısını Başlat (Telefon & Netlify için)
+        // 4. MQTT WebSockets
         this.initMqtt();
     }
 
@@ -95,10 +98,7 @@ class SyncEngine {
     }
 
     initMqtt() {
-        // MQTT CDN kütüphanesi yüklü mü kontrol et
         if (typeof mqtt === 'undefined') {
-            // mqtt CDN yüklenmemişse dinamik yükle veya yerel çalış
-            console.log("MQTT istemcisi yükleniyor...");
             this.loadMqttScript(() => {
                 this.connectMqtt();
             });
@@ -118,8 +118,7 @@ class SyncEngine {
             if (callback) callback();
         };
         script.onerror = () => {
-            console.warn("MQTT CDN yüklenemedi. Sadece yerel senkronizasyon aktif.");
-            this.onConnectionStatus({ status: 'local_only', text: 'Yerel Mod Aktif (Aynı PC)' });
+            this.onConnectionStatus({ status: 'local_only', text: 'Yerel Mod' });
         };
         document.head.appendChild(script);
     }
@@ -127,10 +126,9 @@ class SyncEngine {
     connectMqtt() {
         if (typeof mqtt === 'undefined') return;
 
-        const topic = `death_counter_room_v2/${this.roomId}`;
+        const topic = `death_counter_room_v3/${this.roomId}`;
         const clientId = `dc_${Math.random().toString(16).substr(2, 8)}`;
         
-        // Ücretsiz & Hızlı MQTT WebSocket Brokerları
         const brokers = [
             'wss://broker.emqx.io:8084/mqtt',
             'wss://broker.hivemq.com:8884/mqtt'
@@ -140,34 +138,27 @@ class SyncEngine {
 
         const tryConnect = () => {
             if (currentBrokerIndex >= brokers.length) {
-                console.warn("Tüm MQTT broker bağlantıları denendi. Yerel modda devam ediliyor.");
-                this.onConnectionStatus({ status: 'local_only', text: 'Yerel Mod (BroadcastChannel)' });
+                this.onConnectionStatus({ status: 'local_only', text: 'Yerel Mod' });
                 return;
             }
 
             const brokerUrl = brokers[currentBrokerIndex];
-            console.log(`MQTT Broker'a bağlanılıyor: ${brokerUrl}`);
 
             try {
                 this.mqttClient = mqtt.connect(brokerUrl, {
                     clientId: clientId,
                     clean: true,
-                    connectTimeout: 5000,
+                    connectTimeout: 4000,
                     reconnectPeriod: 3000
                 });
 
                 this.mqttClient.on('connect', () => {
-                    console.log("MQTT Broker'a başarıyla bağlandı!");
                     this.isConnectedMqtt = true;
-                    this.onConnectionStatus({ status: 'connected', text: 'Bulut & Yerel Senkronize' });
+                    this.onConnectionStatus({ status: 'connected', text: 'Senkronize' });
 
                     this.mqttClient.subscribe(topic, { qos: 0 }, (err) => {
-                        if (!err) {
-                            console.log(`Oda konusuna abone olundu: ${topic}`);
-                            // Eğer overlay ise ve host değilse durumu talep et
-                            if (!this.isHost) {
-                                this.sendMessage({ type: 'REQUEST_STATE' });
-                            }
+                        if (!err && !this.isHost) {
+                            this.sendMessage({ type: 'REQUEST_STATE' });
                         }
                     });
                 });
@@ -175,17 +166,11 @@ class SyncEngine {
                 this.mqttClient.on('message', (t, message) => {
                     try {
                         const parsed = JSON.parse(message.toString());
-                        // Kendi gönderdiğimiz mesajları tekrar işlememek için clientId kontrolü
-                        if (parsed.senderId !== clientId) {
-                            this.handleIncomingMessage(parsed, 'mqtt');
-                        }
-                    } catch (e) {
-                        console.error("MQTT mesaj parse hatası:", e);
-                    }
+                        this.handleIncomingMessage(parsed, 'mqtt');
+                    } catch (e) {}
                 });
 
-                this.mqttClient.on('error', (err) => {
-                    console.warn("MQTT bağlantı hatası:", err);
+                this.mqttClient.on('error', () => {
                     this.mqttClient.end();
                     currentBrokerIndex++;
                     tryConnect();
@@ -196,7 +181,6 @@ class SyncEngine {
                 });
 
             } catch (err) {
-                console.warn("MQTT connect exception:", err);
                 currentBrokerIndex++;
                 tryConnect();
             }
@@ -206,19 +190,19 @@ class SyncEngine {
     }
 
     sendMessage(payload) {
-        payload.senderId = this.mqttClient ? this.mqttClient.options?.clientId : 'local';
+        payload.instanceId = this.instanceId;
         payload.timestamp = Date.now();
 
-        // 1. BroadcastChannel ile aynı PC'ye anında yolla
+        // 1. BroadcastChannel (Aynı PC)
         if (this.broadcastChannel) {
             try {
                 this.broadcastChannel.postMessage(payload);
             } catch (e) {}
         }
 
-        // 2. MQTT ile buluta yolla (Telefon / Uzak cihazlar)
+        // 2. MQTT (Uzak cihazlar)
         if (this.mqttClient && this.isConnectedMqtt) {
-            const topic = `death_counter_room_v2/${this.roomId}`;
+            const topic = `death_counter_room_v3/${this.roomId}`;
             try {
                 this.mqttClient.publish(topic, JSON.stringify(payload));
             } catch (e) {}
@@ -227,6 +211,14 @@ class SyncEngine {
 
     handleIncomingMessage(message, source) {
         if (!message || !message.type) return;
+
+        // Kendi gönderdiğimiz mesajları yut (Döngü engelleme)
+        if (message.instanceId === this.instanceId) return;
+
+        // Eski/stale durum mesajlarını yut
+        if (message.state && message.state.updatedAt && message.state.updatedAt < this.state.updatedAt) {
+            return;
+        }
 
         switch (message.type) {
             case 'STATE_UPDATE':
@@ -238,7 +230,6 @@ class SyncEngine {
                 break;
 
             case 'DEATH_TRIGGER':
-                // Ölüm artışı animasyon ve ses tetiklemesi
                 if (message.state) {
                     this.state = { ...this.state, ...message.state };
                     this.saveLocalState();
@@ -248,7 +239,6 @@ class SyncEngine {
                 break;
 
             case 'REQUEST_STATE':
-                // Yeni bağlanan istemciye güncel durumu ilet (Eğer host ise)
                 if (this.isHost) {
                     this.broadcastState();
                 }
@@ -264,7 +254,6 @@ class SyncEngine {
         }
     }
 
-    // Durumu güncelle ve tüm bağlı ekranlara yayınla
     updateState(partialState, isDeathIncrement = false, delta = 1) {
         this.state = {
             ...this.state,
@@ -290,7 +279,6 @@ class SyncEngine {
         }
     }
 
-    // Sadece mevcut durumu yayınla
     broadcastState() {
         this.sendMessage({
             type: 'STATE_UPDATE',
@@ -298,19 +286,16 @@ class SyncEngine {
         });
     }
 
-    // Hızlı ölüm arttırma
     incrementDeath(amount = 1) {
         const newDeaths = Math.max(0, (parseInt(this.state.deaths, 10) || 0) + amount);
         this.updateState({ deaths: newDeaths }, true, amount);
     }
 
-    // Hızlı ölüm azaltma
     decrementDeath(amount = 1) {
         const newDeaths = Math.max(0, (parseInt(this.state.deaths, 10) || 0) - amount);
         this.updateState({ deaths: newDeaths }, false, -amount);
     }
 
-    // Sıfırlama
     resetDeaths() {
         this.updateState({ deaths: 0 });
         this.sendMessage({
@@ -319,7 +304,6 @@ class SyncEngine {
         });
     }
 
-    // Oda değiştirme
     setRoom(newRoomId) {
         if (!newRoomId || newRoomId === this.roomId) return;
         this.roomId = newRoomId;
@@ -333,7 +317,7 @@ class SyncEngine {
             };
         }
         if (this.mqttClient && this.isConnectedMqtt) {
-            this.mqttClient.subscribe(`death_counter_room_v2/${this.roomId}`);
+            this.mqttClient.subscribe(`death_counter_room_v3/${this.roomId}`);
         }
         this.onStateChange(this.state, 'room_change');
     }
