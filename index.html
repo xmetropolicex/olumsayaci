@@ -72,14 +72,26 @@
         +1 ÖLÜM EKLE
       </button>
 
-      <!-- HIZLI BUTONLAR -->
+      <!-- HIZLI BUTONLAR (STREAMDECK KARO DÜZENİ) -->
       <div class="quick-btn-grid">
-        <button id="btnAdd5" class="btn btn-secondary">⚡ +5 Ekle</button>
-        <button id="btnSub1" class="btn btn-secondary">➖ -1 Düş</button>
-        <button id="btnManualSet" class="btn btn-secondary">✏️ Sayı Gir</button>
-        <button id="btnReset" class="btn btn-danger-outline">🔄 Sıfırla</button>
+        <button id="btnAdd5" class="btn btn-action-tile">
+          <span class="action-num">+5</span>
+          <span class="action-lbl">Ekle</span>
+        </button>
+        <button id="btnSub1" class="btn btn-action-tile">
+          <span class="action-num">-1</span>
+          <span class="action-lbl">Düş</span>
+        </button>
+        <button id="btnManualSet" class="btn btn-action-tile">
+          <span class="action-num">Sayı</span>
+          <span class="action-lbl">Gir</span>
+        </button>
+        <button id="btnReset" class="btn btn-action-tile btn-tile-danger">
+          <span class="action-num">0</span>
+          <span class="action-lbl">Sıfırla</span>
+        </button>
       </div>
-      <div style="margin-top: 8px; font-size: 11px; color: var(--text-muted);">
+      <div class="keyboard-hint" style="margin-top: 8px; font-size: 11px; color: var(--text-muted);">
         ⌨️ Kısayol: Klavyenizden <b style="color:#fff;">[Numpad +]</b> veya <b style="color:#fff;">[Boşluk]</b> tuşuna basabilirsiniz.
       </div>
     </div>
