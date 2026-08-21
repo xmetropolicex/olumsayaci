@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 previewCounterSec.appendChild(container);
                 setTimeout(() => {
                     if (container.parentNode) container.parentNode.removeChild(container);
-                }, 2400);
+                }, 2000);
             }
         }
     }

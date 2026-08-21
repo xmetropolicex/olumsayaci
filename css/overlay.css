@@ -225,105 +225,90 @@ body.overlay-mode {
 }
 
 .skull-burst-icon {
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
   fill: #ffffff !important;
-  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 24px rgba(255, 255, 255, 0.6));
-  animation: whiteSkullZoomBurst 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  filter: drop-shadow(0 0 10px #ffffff) drop-shadow(0 0 20px rgba(255, 255, 255, 0.7));
+  will-change: transform, opacity;
+  animation: whiteSkullSmoothBurst 1.8s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
 }
 
-@keyframes whiteSkullZoomBurst {
+@keyframes whiteSkullSmoothBurst {
   0% {
     opacity: 0;
-    transform: scale(0.25) translateY(0);
-    filter: drop-shadow(0 0 6px #ffffff) blur(0px);
+    transform: translate3d(0, 4px, 0) scale(0.2);
   }
-  18% {
+  14% {
     opacity: 1;
-    transform: scale(1.5) translateY(-4px);
-    filter: drop-shadow(0 0 20px #ffffff) blur(0px);
+    transform: translate3d(0, -4px, 0) scale(1.5);
   }
-  50% {
-    opacity: 0.95;
-    transform: scale(2.2) translateY(-10px);
-    filter: drop-shadow(0 0 28px #ffffff) blur(1px);
-  }
-  75% {
-    opacity: 0.55;
-    transform: scale(2.9) translateY(-18px);
-    filter: drop-shadow(0 0 35px rgba(255, 255, 255, 0.4)) blur(4px);
+  60% {
+    opacity: 0.9;
+    transform: translate3d(0, -14px, 0) scale(2.4);
   }
   100% {
     opacity: 0;
-    transform: scale(3.8) translateY(-26px);
-    filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0)) blur(10px);
+    transform: translate3d(0, -28px, 0) scale(3.6);
   }
 }
 
 /* Sigara Dumanı Genişleyen Halka Efekti (Smoke Rings) */
 .smoke-ring {
   position: absolute;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.85);
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), inset 0 0 6px rgba(255, 255, 255, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), inset 0 0 6px rgba(255, 255, 255, 0.5);
+  will-change: transform, opacity;
   opacity: 0;
-  animation: smokeRingExpand 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: smokeRingSmooth 1.8s cubic-bezier(0.08, 0.85, 0.25, 1) forwards;
 }
 
 .smoke-ring.ring-delayed {
-  animation-delay: 0.25s;
+  animation-delay: 0.18s;
   border-width: 1.5px;
 }
 
-@keyframes smokeRingExpand {
+@keyframes smokeRingSmooth {
   0% {
     transform: scale(0.2);
     opacity: 0.95;
-    filter: blur(0.5px);
   }
-  35% {
-    transform: scale(1.8);
-    opacity: 0.85;
-    filter: blur(1.5px);
-  }
-  65% {
-    transform: scale(3.2);
-    opacity: 0.45;
-    filter: blur(3.5px);
+  50% {
+    opacity: 0.75;
   }
   100% {
-    transform: scale(4.8);
+    transform: scale(4.4);
     opacity: 0;
-    filter: blur(8px);
   }
 }
 
 /* Dağılan Sigara Dumanı Bulutları */
 .smoke-puff {
   position: absolute;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(220, 230, 245, 0.45) 50%, transparent 80%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.85) 0%, rgba(220, 230, 245, 0.4) 50%, transparent 80%);
   opacity: 0;
-  filter: blur(3px);
+  filter: blur(4px);
+  will-change: transform, opacity;
 }
 
-.smoke-puff.p1 { animation: puffDisperse1 2.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-.smoke-puff.p2 { animation: puffDisperse2 2.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-.smoke-puff.p3 { animation: puffDisperse3 2.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-.smoke-puff.p4 { animation: puffDisperse4 2.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-.smoke-puff.p5 { animation: puffDisperse5 2.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-.smoke-puff.p6 { animation: puffDisperse6 2.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.smoke-puff.p1 { animation: puffSmooth1 1.9s cubic-bezier(0.08, 0.85, 0.25, 1) forwards; }
+.smoke-puff.p2 { animation: puffSmooth2 1.9s cubic-bezier(0.08, 0.85, 0.25, 1) forwards; }
+.smoke-puff.p3 { animation: puffSmooth3 1.9s cubic-bezier(0.08, 0.85, 0.25, 1) forwards; }
+.smoke-puff.p4 { animation: puffSmooth4 1.9s cubic-bezier(0.08, 0.85, 0.25, 1) forwards; }
+.smoke-puff.p5 { animation: puffSmooth5 1.9s cubic-bezier(0.08, 0.85, 0.25, 1) forwards; }
+.smoke-puff.p6 { animation: puffSmooth6 1.9s cubic-bezier(0.08, 0.85, 0.25, 1) forwards; }
 
-@keyframes puffDisperse1 { 0% { transform: translate(0,0) scale(0.4); opacity: 0.9; } 100% { transform: translate(-34px, -24px) scale(2.8); opacity: 0; filter: blur(8px); } }
-@keyframes puffDisperse2 { 0% { transform: translate(0,0) scale(0.4); opacity: 0.9; } 100% { transform: translate(34px, -24px) scale(2.8); opacity: 0; filter: blur(8px); } }
-@keyframes puffDisperse3 { 0% { transform: translate(0,0) scale(0.4); opacity: 0.9; } 100% { transform: translate(-38px, 10px) scale(2.5); opacity: 0; filter: blur(8px); } }
-@keyframes puffDisperse4 { 0% { transform: translate(0,0) scale(0.4); opacity: 0.9; } 100% { transform: translate(38px, 10px) scale(2.5); opacity: 0; filter: blur(8px); } }
-@keyframes puffDisperse5 { 0% { transform: translate(0,0) scale(0.4); opacity: 0.9; } 100% { transform: translate(-18px, -38px) scale(3.0); opacity: 0; filter: blur(9px); } }
-@keyframes puffDisperse6 { 0% { transform: translate(0,0) scale(0.4); opacity: 0.9; } 100% { transform: translate(18px, -38px) scale(3.0); opacity: 0; filter: blur(9px); } }
+@keyframes puffSmooth1 { 0% { transform: translate3d(0,0,0) scale(0.3); opacity: 0.9; } 100% { transform: translate3d(-34px, -24px, 0) scale(2.8); opacity: 0; } }
+@keyframes puffSmooth2 { 0% { transform: translate3d(0,0,0) scale(0.3); opacity: 0.9; } 100% { transform: translate3d(34px, -24px, 0) scale(2.8); opacity: 0; } }
+@keyframes puffSmooth3 { 0% { transform: translate3d(0,0,0) scale(0.3); opacity: 0.9; } 100% { transform: translate3d(-38px, 10px, 0) scale(2.5); opacity: 0; } }
+@keyframes puffSmooth4 { 0% { transform: translate3d(0,0,0) scale(0.3); opacity: 0.9; } 100% { transform: translate3d(38px, 10px, 0) scale(2.5); opacity: 0; } }
+@keyframes puffSmooth5 { 0% { transform: translate3d(0,0,0) scale(0.3); opacity: 0.9; } 100% { transform: translate3d(-18px, -38px, 0) scale(3.0); opacity: 0; } }
+@keyframes puffSmooth6 { 0% { transform: translate3d(0,0,0) scale(0.3); opacity: 0.9; } 100% { transform: translate3d(18px, -38px, 0) scale(3.0); opacity: 0; } }
 
 /* ================= 6 PREMİUM TEMA ================= */
 

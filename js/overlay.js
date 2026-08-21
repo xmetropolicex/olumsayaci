@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (container.parentNode) {
                 container.parentNode.removeChild(container);
             }
-        }, 2400);
+        }, 2000);
     }
 
     // İlk yüklemede mevcut durumu render et
