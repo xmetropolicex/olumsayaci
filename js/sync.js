@@ -38,7 +38,13 @@ class SyncEngine {
 
     getRoomIdFromUrl() {
         const params = new URLSearchParams(window.location.search);
-        return params.get('room') || 'yayin-oda-1';
+        const fromUrl = params.get('room');
+        if (fromUrl) return fromUrl;
+        try {
+            const savedRoom = localStorage.getItem('stream_dc_last_active_room');
+            if (savedRoom) return savedRoom;
+        } catch (e) {}
+        return 'yayin-oda-1';
     }
 
     init() {
@@ -78,7 +84,10 @@ class SyncEngine {
 
     loadLocalState() {
         try {
-            const saved = localStorage.getItem(this.storageKey);
+            let saved = localStorage.getItem(this.storageKey);
+            if (!saved) {
+                saved = localStorage.getItem('stream_dc_global_backup');
+            }
             if (saved) {
                 const parsed = JSON.parse(saved);
                 if (parsed.avatarUrl && parsed.avatarUrl.endsWith('.png')) {
@@ -94,6 +103,8 @@ class SyncEngine {
     saveLocalState() {
         try {
             localStorage.setItem(this.storageKey, JSON.stringify(this.state));
+            localStorage.setItem('stream_dc_global_backup', JSON.stringify(this.state));
+            localStorage.setItem('stream_dc_last_active_room', this.roomId);
         } catch (e) {}
     }
 
