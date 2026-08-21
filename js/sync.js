@@ -1,11 +1,12 @@
 /**
  * OBS Ölüm Sayacı - Senkronizasyon Motoru (SyncEngine)
- * Anında ve kesintisiz çift yönlü eşitleme
+ * Anında, çift yönlü ve deduplication (çift tetikleme engelli) eşitleme
  */
 
 class SyncEngine {
     constructor(options = {}) {
         this.instanceId = 'inst_' + Math.random().toString(36).substr(2, 9);
+        this.processedMsgIds = new Set();
         this.roomId = options.roomId || this.getRoomIdFromUrl() || 'yayin-oda-1';
         this.isHost = options.isHost || false;
         this.onStateChange = options.onStateChange || (() => {});
@@ -27,8 +28,9 @@ class SyncEngine {
             layout: 'horizontal',
             accentColor: '#ef4444',
             counterLabel: 'ÖLÜM SAYISI',
-            shakeEffect: false,
-            particlesEnabled: false,
+            shakeEffect: true,
+            flashEffect: true,
+            particlesEnabled: true,
             updatedAt: Date.now()
         };
 
@@ -58,7 +60,7 @@ class SyncEngine {
             }
         }
 
-        // 3. Storage Event (Sekmeler arası anında tetikleme)
+        // 3. Storage Event (Sekmeler arası eşitleme)
         window.addEventListener('storage', (e) => {
             if (e.key === this.storageKey && e.newValue) {
                 try {
@@ -125,7 +127,7 @@ class SyncEngine {
     connectMqtt() {
         if (typeof mqtt === 'undefined') return;
 
-        const topic = `death_counter_room_v4/${this.roomId}`;
+        const topic = `death_counter_room_v5/${this.roomId}`;
         const clientId = `dc_${Math.random().toString(16).substr(2, 8)}`;
         
         const brokers = [
@@ -190,6 +192,7 @@ class SyncEngine {
 
     sendMessage(payload) {
         payload.instanceId = this.instanceId;
+        payload.msgId = `${this.instanceId}_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
         payload.timestamp = Date.now();
 
         // 1. BroadcastChannel (Aynı PC)
@@ -201,7 +204,7 @@ class SyncEngine {
 
         // 2. MQTT (Uzak cihazlar)
         if (this.mqttClient && this.isConnectedMqtt) {
-            const topic = `death_counter_room_v4/${this.roomId}`;
+            const topic = `death_counter_room_v5/${this.roomId}`;
             try {
                 this.mqttClient.publish(topic, JSON.stringify(payload));
             } catch (e) {}
@@ -211,8 +214,18 @@ class SyncEngine {
     handleIncomingMessage(message, source) {
         if (!message || !message.type) return;
 
-        // Kendi sekmemizin gönderdiği mesajı tekrar işlememek için kontrol
+        // Kendi sekmemizin gönderdiği mesajı yut
         if (message.instanceId === this.instanceId) return;
+
+        // Çift işlemeyi (duplicate trigger) engelle
+        if (message.msgId) {
+            if (this.processedMsgIds.has(message.msgId)) return;
+            this.processedMsgIds.add(message.msgId);
+            if (this.processedMsgIds.size > 80) {
+                const first = this.processedMsgIds.values().next().value;
+                this.processedMsgIds.delete(first);
+            }
+        }
 
         switch (message.type) {
             case 'STATE_UPDATE':
@@ -313,7 +326,7 @@ class SyncEngine {
             };
         }
         if (this.mqttClient && this.isConnectedMqtt) {
-            this.mqttClient.subscribe(`death_counter_room_v4/${this.roomId}`);
+            this.mqttClient.subscribe(`death_counter_room_v5/${this.roomId}`);
         }
         this.onStateChange(this.state, 'room_change');
     }

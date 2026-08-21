@@ -1,9 +1,9 @@
 /* ==========================================================================
    OBS ÖLÜM SAYACI (DEATH COUNTER) - OVERLAY STILLERI
-   Net, Şık, Glowsuz ve Kristal Okunabilir Kart Tasarımı
+   Yayıncılar İçin Premium, Estetik ve Net Kart Tasarımları
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Outfit:wght@400;600;700;800;900&family=Press+Start+2P&family=Rajdhani:wght@600;700;900&family=Teko:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Outfit:wght@500;600;700;800;900&family=Press+Start+2P&family=Rajdhani:wght@600;700;900&family=Teko:wght@600;700&display=swap');
 
 :root {
   --accent: #ef4444;
@@ -28,13 +28,34 @@ body.overlay-mode {
   user-select: none;
 }
 
+/* ================= KIRMIZI EKRAN PARLAMASI (FLASH) ================= */
+.death-flash-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  background: radial-gradient(circle at center, transparent 35%, rgba(220, 38, 38, 0.45) 80%, rgba(185, 28, 28, 0.75) 100%);
+  opacity: 0;
+  z-index: 99999;
+}
+
+.death-flash-active {
+  animation: deathScreenFlash 0.65s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+}
+
+@keyframes deathScreenFlash {
+  0% { opacity: 0; }
+  15% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
 /* ================= ANA KART KAPSAYICISI ================= */
 .death-card-wrapper {
   position: relative;
   display: inline-flex;
   transform-origin: top left;
-  transform: scale(var(--scale-factor));
-  transition: transform 0.2s ease-out;
 }
 
 .death-card {
@@ -46,15 +67,15 @@ body.overlay-mode {
   background: var(--card-bg);
   border: 2px solid var(--card-border);
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75);
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 /* ================= GÖRSEL & AVATAR ALANI ================= */
 .avatar-container {
   position: relative;
-  width: 54px;
-  height: 54px;
+  width: 56px;
+  height: 56px;
   border-radius: 10px;
   overflow: hidden;
   flex-shrink: 0;
@@ -82,6 +103,7 @@ body.overlay-mode {
   font-weight: 900;
   padding: 1px 4px;
   border-radius: 4px 0 0 0;
+  letter-spacing: 0.5px;
 }
 
 /* ================= OYUN & BİLGİ ALANI ================= */
@@ -89,7 +111,7 @@ body.overlay-mode {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-width: 100px;
+  min-width: 110px;
 }
 
 .game-title {
@@ -99,7 +121,7 @@ body.overlay-mode {
   text-transform: uppercase;
   color: var(--text-main);
   white-space: nowrap;
-  max-width: 160px;
+  max-width: 170px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -109,7 +131,7 @@ body.overlay-mode {
   font-weight: 700;
   color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
   margin-top: 1px;
 }
 
@@ -134,7 +156,7 @@ body.overlay-mode {
   justify-content: center;
   padding-left: 14px;
   border-left: 1.5px solid rgba(255, 255, 255, 0.15);
-  min-width: 50px;
+  min-width: 52px;
 }
 
 .counter-value {
@@ -146,88 +168,115 @@ body.overlay-mode {
   transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* ================= YÜZEN PARÇACIK ================= */
+/* ================= YÜZEN +1 PARÇACIK ================= */
 .floating-delta {
   position: absolute;
-  top: -12px;
-  right: -8px;
+  top: -10px;
+  right: -6px;
   font-family: 'Outfit', sans-serif;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 900;
   color: #ef4444;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
   pointer-events: none;
-  animation: floatUp 0.9s ease-out forwards;
+  animation: floatUp 0.85s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 @keyframes floatUp {
-  0% { opacity: 0; transform: translateY(6px); }
-  20% { opacity: 1; transform: translateY(-2px); }
-  80% { opacity: 1; transform: translateY(-16px); }
-  100% { opacity: 0; transform: translateY(-26px); }
+  0% { opacity: 0; transform: translateY(6px) scale(0.7); }
+  25% { opacity: 1; transform: translateY(-2px) scale(1.2); }
+  75% { opacity: 1; transform: translateY(-16px) scale(1); }
+  100% { opacity: 0; transform: translateY(-28px) scale(0.85); }
 }
 
-/* ================= TEMALAR ================= */
+/* ================= 6 PREMİUM TEMA ================= */
 
-/* 1. DARK SOULS / BLOOD RED */
+/* 1. DARK SOULS / BLOOD RED (Gotik & Asil Kan Kırmızısı) */
 .theme-souls {
   --accent: #ef4444;
-  --card-bg: #140909;
+  --card-bg: linear-gradient(135deg, #18090a 0%, #0d0405 100%);
   --card-border: #991b1b;
 }
 .theme-souls .death-card {
-  border: 2px solid #dc2626;
+  border: 2px solid #b91c1c;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.85), inset 0 0 12px rgba(185, 28, 28, 0.2);
+}
+.theme-souls .avatar-container {
+  border: 2px solid #ef4444;
 }
 .theme-souls .game-title {
   font-family: 'Cinzel', serif;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
+  color: #fee2e2;
 }
 .theme-souls .counter-value {
+  font-family: 'Cinzel', serif;
+  font-size: 36px;
   color: #ef4444;
 }
 
-/* 2. CYBERPUNK */
+/* 2. CYBERPUNK 2077 (Neon Cyan & Pembe Keskin Çizgiler) */
 .theme-cyberpunk {
   --accent: #00f3ff;
-  --card-bg: #0b0f19;
+  --card-bg: linear-gradient(135deg, #090e1a 0%, #050811 100%);
   --card-border: #00f3ff;
 }
 .theme-cyberpunk .death-card {
   border-radius: 4px;
   border: 2px solid #00f3ff;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8), inset 0 0 10px rgba(0, 243, 255, 0.15);
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+}
+.theme-cyberpunk .avatar-container {
+  border-radius: 4px;
+  border-color: #ff007f;
 }
 .theme-cyberpunk .game-title {
   font-family: 'Rajdhani', sans-serif;
+  letter-spacing: 1.5px;
+  font-weight: 900;
   color: #00f3ff;
 }
 .theme-cyberpunk .counter-value {
   font-family: 'Rajdhani', sans-serif;
   font-weight: 900;
+  font-size: 40px;
   color: #ff007f;
 }
 
-/* 3. MODERN GLASS */
+/* 3. MODERN FROST GLASS (Buzlu Cam & Minimalist İndigo) */
 .theme-glass {
   --accent: #818cf8;
-  --card-bg: rgba(20, 24, 38, 0.92);
-  --card-border: rgba(255, 255, 255, 0.2);
+  --card-bg: rgba(18, 22, 36, 0.92);
+  --card-border: rgba(255, 255, 255, 0.18);
 }
 .theme-glass .death-card {
-  border-radius: 14px;
+  border-radius: 16px;
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(10px);
+}
+.theme-glass .avatar-container {
+  border-radius: 12px;
+  border-color: #818cf8;
+}
+.theme-glass .game-title {
+  color: #f1f5f9;
 }
 .theme-glass .counter-value {
   color: #ffffff;
 }
 
-/* 4. RETRO 8-BIT */
+/* 4. RETRO 8-BIT (Arcade & Piksel Nostalji) */
 .theme-retro {
   --accent: #facc15;
-  --card-bg: #18181b;
+  --card-bg: #141417;
   --card-border: #facc15;
 }
 .theme-retro .death-card {
   border-radius: 0;
   border: 3px solid #facc15;
-  padding: 8px 12px;
+  box-shadow: 4px 4px 0px #000000;
+  padding: 8px 14px;
 }
 .theme-retro .avatar-container {
   border-radius: 0;
@@ -237,6 +286,7 @@ body.overlay-mode {
   font-family: 'Press Start 2P', monospace;
   font-size: 9px;
   color: #facc15;
+  line-height: 1.3;
 }
 .theme-retro .char-name {
   font-family: 'Press Start 2P', monospace;
@@ -244,48 +294,63 @@ body.overlay-mode {
 }
 .theme-retro .counter-value {
   font-family: 'Press Start 2P', monospace;
-  font-size: 20px;
+  font-size: 22px;
   color: #ef4444;
 }
 
-/* 5. ESPORTS PRO / VALORANT */
+/* 5. ESPORTS PRO / VALORANT (Taktiksel Kırmızı & Karbon) */
 .theme-esports {
   --accent: #ff4655;
-  --card-bg: #0f1923;
+  --card-bg: #0d131a;
   --card-border: #ff4655;
 }
 .theme-esports .death-card {
   border-radius: 2px;
-  border-left: 4px solid #ff4655;
-  border-right: 1px solid rgba(255, 70, 85, 0.4);
+  border-left: 5px solid #ff4655;
+  border-right: 1.5px solid rgba(255, 70, 85, 0.4);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
+.theme-esports .avatar-container {
+  border-radius: 2px;
+  border-color: #ff4655;
+}
 .theme-esports .game-title {
   font-family: 'Rajdhani', sans-serif;
+  font-weight: 900;
+  font-size: 16px;
   color: #ffffff;
 }
 .theme-esports .counter-value {
+  font-family: 'Teko', sans-serif;
+  font-size: 46px;
+  line-height: 0.9;
   color: #ff4655;
 }
 
-/* 6. MIDNIGHT GOLD */
+/* 6. MIDNIGHT GOLD (Kraliyet Siyah & Metalik Altın) */
 .theme-gold {
   --accent: #fbbf24;
-  --card-bg: #14120e;
+  --card-bg: linear-gradient(135deg, #17140f 0%, #0a0907 100%);
   --card-border: #d97706;
 }
 .theme-gold .death-card {
   border: 2px solid #fbbf24;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.85);
+}
+.theme-gold .avatar-container {
+  border: 2px solid #fbbf24;
 }
 .theme-gold .game-title {
+  font-family: 'Cinzel', serif;
   color: #fef3c7;
 }
 .theme-gold .counter-value {
+  font-family: 'Cinzel', serif;
   color: #fbbf24;
 }
 
-/* ================= DÜZENLER ================= */
+/* ================= DÜZENLER (LAYOUTS) ================= */
 
 /* Dikey Kart */
 .layout-vertical .death-card {
@@ -318,8 +383,8 @@ body.overlay-mode {
   border-radius: 30px;
 }
 .layout-compact .avatar-container {
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
 }
 .layout-compact .game-title {
