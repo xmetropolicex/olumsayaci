@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cardWrapper = document.getElementById('cardWrapper');
     const deathCard = document.getElementById('deathCard');
     const avatarImg = document.getElementById('avatarImg');
+    const bgWatermarkImg = document.getElementById('bgWatermarkImg');
     const gameTitleEl = document.getElementById('gameTitle');
     const charNameEl = document.getElementById('charName');
     const counterLabelEl = document.getElementById('counterLabel');
@@ -34,9 +35,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (charNameEl) charNameEl.textContent = state.characterName || '';
         if (counterLabelEl) counterLabelEl.textContent = state.counterLabel || 'ÖLÜM SAYISI';
 
-        // 2. Avatar / Kapak Resmi
-        if (avatarImg && state.avatarUrl && avatarImg.src !== state.avatarUrl) {
-            avatarImg.src = state.avatarUrl;
+        // 2. Avatar / Kapak Resmi & Arka Plan Watermark
+        if (state.avatarUrl) {
+            if (avatarImg && avatarImg.src !== state.avatarUrl) {
+                avatarImg.src = state.avatarUrl;
+            }
+            if (bgWatermarkImg && bgWatermarkImg.src !== state.avatarUrl) {
+                bgWatermarkImg.src = state.avatarUrl;
+            }
         }
 
         // 3. Tema Sınıfları

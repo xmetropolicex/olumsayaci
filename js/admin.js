@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Canlı Önizleme Kartı Elementleri
     const previewWrapper = document.getElementById('previewWrapper');
     const previewCard = document.getElementById('previewCard');
+    const previewBgWatermark = document.getElementById('previewBgWatermark');
     const previewAvatar = document.getElementById('previewAvatar');
     const previewGameTitle = document.getElementById('previewGameTitle');
     const previewCharName = document.getElementById('previewCharName');
@@ -129,7 +130,8 @@ document.addEventListener('DOMContentLoaded', () => {
         previewCounterVal.textContent = state.deaths || 0;
 
         if (state.avatarUrl) {
-            previewAvatar.src = state.avatarUrl;
+            if (previewAvatar) previewAvatar.src = state.avatarUrl;
+            if (previewBgWatermark) previewBgWatermark.src = state.avatarUrl;
         }
 
         // Tema
