@@ -79,24 +79,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // 2. Kart Sarsıntı Efekti (Shake)
-        if (state && state.shakeEffect && deathCard) {
+        if (deathCard && (!state || state.shakeEffect !== false)) {
             deathCard.classList.remove('shake-anim');
             void deathCard.offsetWidth; // Reflow
             deathCard.classList.add('shake-anim');
         }
 
         // 3. Yüzen Parçacık (+1 / Delta)
-        if (state && state.particlesEnabled && deltaNum > 0) {
+        if (!state || state.particlesEnabled !== false) {
             spawnFloatingDelta(deltaNum);
         }
 
         // 4. Kuru Kafa Patlama & Buhar (Pof) Efekti
-        if (state && state.flashEffect !== false && deltaNum > 0) {
+        if (!state || state.flashEffect !== false) {
             spawnSkullBurst();
         }
 
         // 5. Ekran Parlaması
-        if (state && state.flashEffect && flashOverlay) {
+        if (flashOverlay && (!state || state.flashEffect !== false)) {
             flashOverlay.classList.remove('death-flash-active');
             void flashOverlay.offsetWidth;
             flashOverlay.classList.add('death-flash-active');

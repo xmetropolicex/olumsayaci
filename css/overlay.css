@@ -68,7 +68,7 @@ body.overlay-mode {
   border: 2px solid var(--card-border);
   border-radius: 14px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75);
-  overflow: hidden; /* Arka plan watermark'ını kartın içine kırpar */
+  overflow: visible; /* Parçacıklar ve kuru kafa patlaması dışarı taşabilsin */
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
@@ -81,7 +81,7 @@ body.overlay-mode {
   overflow: hidden;
   pointer-events: none;
   z-index: 0;
-  border-radius: inherit;
+  border-radius: 12px;
 }
 
 .bg-watermark-img {
