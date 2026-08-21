@@ -157,8 +157,12 @@ class SyncEngine {
                     this.onConnectionStatus({ status: 'connected', text: 'Senkronize' });
 
                     this.mqttClient.subscribe(topic, { qos: 0 }, (err) => {
-                        if (!err && !this.isHost) {
-                            this.sendMessage({ type: 'REQUEST_STATE' });
+                        if (!err) {
+                            if (!this.isHost) {
+                                this.sendMessage({ type: 'REQUEST_STATE' });
+                            } else {
+                                this.broadcastState();
+                            }
                         }
                     });
                 });
