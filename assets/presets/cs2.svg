@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- CS2 / Tactical Crosshair Skull -->
+  <rect width="100" height="100" fill="#151b22" rx="12" stroke="#e69c24" stroke-width="2"/>
+  <circle cx="50" cy="50" r="36" stroke="#e69c24" stroke-width="2" fill="none"/>
+  <circle cx="50" cy="50" r="24" stroke="#e69c24" stroke-width="1.5" stroke-dasharray="8,4" fill="none" opacity="0.7"/>
+  <!-- Crosshair Lines -->
+  <line x1="10" y1="50" x2="30" y2="50" stroke="#e69c24" stroke-width="2"/>
+  <line x1="70" y1="50" x2="90" y2="50" stroke="#e69c24" stroke-width="2"/>
+  <line x1="50" y1="10" x2="50" y2="30" stroke="#e69c24" stroke-width="2"/>
+  <line x1="50" y1="70" x2="50" y2="90" stroke="#e69c24" stroke-width="2"/>
+  <!-- Skull in center -->
+  <path d="M42 40 C42 35 46 32 50 32 C54 32 58 35 58 40 C58 46 56 48 55 52 L45 52 C44 48 42 46 42 40 Z" fill="#e69c24"/>
+  <circle cx="46" cy="41" r="1.5" fill="#151b22"/>
+  <circle cx="54" cy="41" r="1.5" fill="#151b22"/>
+</svg>

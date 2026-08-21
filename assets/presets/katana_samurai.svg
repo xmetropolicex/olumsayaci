@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Sekiro / Samurai Katana Mask -->
+  <defs>
+    <radialGradient id="sekiroBg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#b91c1c"/>
+      <stop offset="100%" stop-color="#2d0606"/>
+    </radialGradient>
+  </defs>
+  <rect width="100" height="100" fill="url(#sekiroBg)" rx="12" stroke="#dc2626" stroke-width="2"/>
+  <!-- Japanese Kanji (死 - Death) or Oni Mask -->
+  <circle cx="50" cy="50" r="38" fill="#120505" stroke="#fca5a5" stroke-width="1.5"/>
+  <text x="50" y="66" font-family="'Cinzel', serif, sans-serif" font-size="44" font-weight="bold" fill="#ef4444" text-anchor="middle" filter="drop-shadow(0 0 8px rgba(239,68,68,0.8))">死</text>
+  <!-- Crossed Katanas -->
+  <line x1="18" y1="82" x2="82" y2="18" stroke="#ffffff" stroke-width="2" opacity="0.6"/>
+  <line x1="82" y1="82" x2="18" y2="18" stroke="#ffffff" stroke-width="2" opacity="0.6"/>
+</svg>

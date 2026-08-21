@@ -1,0 +1,492 @@
+/* ==========================================================================
+   OBS ÖLÜM SAYACI (DEATH COUNTER) - OVERLAY STILLERI
+   OBS Browser Source için Şeffaf, Yüksek Çözünürlüklü ve Animasyonlu Tasarımlar
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Outfit:wght@400;600;800;900&family=Press+Start+2P&family=Rajdhani:wght@600;700;900&family=Teko:wght@600;700&display=swap');
+
+:root {
+  --accent: #ef4444;
+  --accent-glow: rgba(239, 68, 68, 0.6);
+  --card-bg: rgba(15, 17, 26, 0.88);
+  --card-border: rgba(239, 68, 68, 0.4);
+  --text-main: #ffffff;
+  --text-muted: #94a3b8;
+  --scale-factor: 1;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+body {
+  background-color: transparent !important;
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text-main);
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 24px;
+}
+
+/* ================= ANA KART KAPSAYICISI ================= */
+.death-card-wrapper {
+  position: relative;
+  display: inline-flex;
+  transform-origin: top left;
+  transform: scale(var(--scale-factor));
+  transition: transform 0.2s ease-out;
+}
+
+.death-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px 12px 14px;
+  background: var(--card-bg);
+  border: 2px solid var(--card-border);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px var(--accent-glow);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ================= GÖRSEL & AVATAR ALANI ================= */
+.avatar-container {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 14px var(--accent-glow);
+  background: #090a0f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.avatar-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 1px 5px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+/* ================= OYUN & BİLGİ ALANI ================= */
+.info-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 110px;
+}
+
+.game-title {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-main);
+  white-space: nowrap;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+.char-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-top: 1px;
+}
+
+.label-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.label-pill::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--accent);
+  animation: pulse-dot 1.5s infinite alternate;
+}
+
+/* ================= ÖLÜM SAYACI BÖLÜMÜ ================= */
+.counter-section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-left: 14px;
+  border-left: 1.5px solid rgba(255, 255, 255, 0.12);
+  min-width: 65px;
+}
+
+.skull-icon {
+  width: 18px;
+  height: 18px;
+  fill: var(--accent);
+  filter: drop-shadow(0 0 6px var(--accent-glow));
+  margin-bottom: -2px;
+}
+
+.counter-value {
+  font-family: 'Teko', sans-serif;
+  font-size: 48px;
+  line-height: 0.95;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 0 16px var(--accent-glow), 0 2px 4px rgba(0,0,0,0.9);
+  transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* ================= YÜZEN PARÇACIK (FLOATING +1) ================= */
+.floating-delta {
+  position: absolute;
+  top: -10px;
+  right: -8px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 20px;
+  font-weight: 900;
+  color: #ff4757;
+  text-shadow: 0 0 10px rgba(255, 71, 87, 0.9), 0 2px 4px #000;
+  pointer-events: none;
+  animation: floatUp 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes floatUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.6);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(-5px) scale(1.25);
+  }
+  70% {
+    opacity: 0.9;
+    transform: translateY(-25px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-45px) scale(0.8);
+  }
+}
+
+/* ================= TEMALAR ================= */
+
+/* 1. DARK SOULS / BLOOD RED TEMA */
+.theme-souls {
+  --accent: #e63946;
+  --accent-glow: rgba(230, 57, 70, 0.7);
+  --card-bg: linear-gradient(135deg, rgba(20, 5, 5, 0.92) 0%, rgba(10, 2, 2, 0.96) 100%);
+  --card-border: #8b0000;
+  font-family: 'Cinzel', serif;
+}
+.theme-souls .death-card {
+  border: 2px solid #8b0000;
+  border-image: linear-gradient(to right, #ff4d4d, #4a0000, #ff4d4d) 1;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.9), 0 0 25px rgba(230, 57, 70, 0.5);
+}
+.theme-souls .game-title {
+  font-family: 'Cinzel', serif;
+  letter-spacing: 2px;
+  color: #f1faee;
+}
+.theme-souls .counter-value {
+  font-family: 'Cinzel', serif;
+  font-size: 38px;
+  color: #ff4d4d;
+}
+
+/* 2. CYBERPUNK NEON TEMA */
+.theme-cyberpunk {
+  --accent: #00f3ff;
+  --accent-glow: rgba(0, 243, 255, 0.8);
+  --card-bg: linear-gradient(135deg, rgba(13, 2, 33, 0.94) 0%, rgba(6, 11, 25, 0.96) 100%);
+  --card-border: #ff007f;
+  font-family: 'Rajdhani', sans-serif;
+}
+.theme-cyberpunk .death-card {
+  border-radius: 4px;
+  border: 2px solid #00f3ff;
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.5), inset 0 0 15px rgba(255, 0, 127, 0.2);
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+}
+.theme-cyberpunk .avatar-container {
+  border-radius: 4px;
+  border-color: #ff007f;
+  box-shadow: 0 0 12px rgba(255, 0, 127, 0.7);
+}
+.theme-cyberpunk .game-title {
+  font-family: 'Rajdhani', sans-serif;
+  letter-spacing: 2px;
+  color: #00f3ff;
+}
+.theme-cyberpunk .counter-value {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 900;
+  font-size: 42px;
+  color: #ff007f;
+  text-shadow: 0 0 15px #ff007f;
+}
+
+/* 3. MODERN GLASSMORPHISM TEMA */
+.theme-glass {
+  --accent: #6366f1;
+  --accent-glow: rgba(99, 102, 241, 0.5);
+  --card-bg: rgba(255, 255, 255, 0.07);
+  --card-border: rgba(255, 255, 255, 0.18);
+  font-family: 'Outfit', sans-serif;
+}
+.theme-glass .death-card {
+  border-radius: 20px;
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), 0 0 20px rgba(99, 102, 241, 0.3);
+}
+.theme-glass .counter-value {
+  color: #ffffff;
+  font-family: 'Outfit', sans-serif;
+  font-size: 38px;
+  font-weight: 900;
+}
+
+/* 4. RETRO 8-BIT ARCADE TEMA */
+.theme-retro {
+  --accent: #eab308;
+  --accent-glow: rgba(234, 179, 8, 0.6);
+  --card-bg: #18181b;
+  --card-border: #facc15;
+  font-family: 'Press Start 2P', monospace;
+}
+.theme-retro .death-card {
+  border-radius: 0;
+  border: 4px solid #facc15;
+  box-shadow: 6px 6px 0px #000000;
+  image-rendering: pixelated;
+  padding: 10px 16px;
+}
+.theme-retro .avatar-container {
+  border-radius: 0;
+  border: 3px solid #facc15;
+  box-shadow: none;
+}
+.theme-retro .game-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  color: #facc15;
+  letter-spacing: 0;
+}
+.theme-retro .char-name {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: #a1a1aa;
+}
+.theme-retro .counter-value {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 26px;
+  color: #ef4444;
+}
+
+/* 5. ESPORTS PRO / VALORANT TEMA */
+.theme-esports {
+  --accent: #ff4655;
+  --accent-glow: rgba(255, 70, 85, 0.7);
+  --card-bg: #0f1923;
+  --card-border: #ff4655;
+  font-family: 'Rajdhani', sans-serif;
+}
+.theme-esports .death-card {
+  border-radius: 2px;
+  border-left: 6px solid #ff4655;
+  border-right: 2px solid rgba(255, 70, 85, 0.4);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.8), 0 0 15px rgba(255, 70, 85, 0.3);
+}
+.theme-esports .game-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 900;
+  font-size: 18px;
+  color: #ece8e1;
+}
+.theme-esports .counter-value {
+  font-family: 'Teko', sans-serif;
+  font-size: 52px;
+  color: #ff4655;
+}
+
+/* 6. MIDNIGHT GOLD TEMA */
+.theme-gold {
+  --accent: #fbbf24;
+  --accent-glow: rgba(251, 191, 36, 0.6);
+  --card-bg: linear-gradient(135deg, #1c1917 0%, #0c0a09 100%);
+  --card-border: #d97706;
+  font-family: 'Cinzel', serif;
+}
+.theme-gold .death-card {
+  border: 2px solid #fbbf24;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 20px rgba(251, 191, 36, 0.4);
+}
+.theme-gold .game-title {
+  color: #fef3c7;
+}
+.theme-gold .counter-value {
+  color: #fbbf24;
+  text-shadow: 0 0 15px rgba(251, 191, 36, 0.7);
+}
+
+/* ================= DÜZENLER (LAYOUTS) ================= */
+
+/* Dikey Kart (Vertical) */
+.layout-vertical .death-card {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px 24px;
+  gap: 12px;
+  min-width: 170px;
+}
+.layout-vertical .avatar-container {
+  width: 80px;
+  height: 80px;
+}
+.layout-vertical .info-section {
+  align-items: center;
+}
+.layout-vertical .counter-section {
+  border-left: none;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.12);
+  padding-left: 0;
+  padding-top: 10px;
+  width: 100%;
+}
+
+/* Kompakt Rozet (Compact Pill) */
+.layout-compact .death-card {
+  padding: 6px 14px 6px 8px;
+  gap: 10px;
+  border-radius: 40px;
+}
+.layout-compact .avatar-container {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+}
+.layout-compact .game-title {
+  font-size: 13px;
+  max-width: 120px;
+}
+.layout-compact .char-name,
+.layout-compact .label-pill {
+  display: none;
+}
+.layout-compact .counter-section {
+  padding-left: 10px;
+}
+.layout-compact .counter-value {
+  font-size: 32px;
+}
+
+/* Boss / Health Bar Style (Boss Banner) */
+.layout-boss .death-card {
+  min-width: 340px;
+  border-radius: 8px;
+  padding: 10px 18px;
+  background: linear-gradient(90deg, rgba(30, 5, 5, 0.95) 0%, rgba(10, 0, 0, 0.95) 100%);
+  border-bottom: 3px solid var(--accent);
+}
+.layout-boss .avatar-container {
+  width: 52px;
+  height: 52px;
+}
+
+/* ================= ANİMASYONLAR ================= */
+@keyframes pulse-dot {
+  0% { transform: scale(0.8); opacity: 0.6; }
+  100% { transform: scale(1.3); opacity: 1; }
+}
+
+/* Ölüm Eklendiğinde Patlama / Pop Animasyonu */
+.pop-anim {
+  animation: deathPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes deathPop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.38); filter: drop-shadow(0 0 20px var(--accent)); }
+  100% { transform: scale(1); }
+}
+
+/* Kart Titremesi (Shake) */
+.shake-anim {
+  animation: cardShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes cardShake {
+  10%, 90% { transform: translate3d(-2px, 0, 0); }
+  20%, 80% { transform: translate3d(4px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-5px, 0, 0); }
+  40%, 60% { transform: translate3d(5px, 0, 0); }
+}
+
+/* Kırmızı Ölüm Parıltısı (Red Vignette Flash) */
+.death-flash-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  background: radial-gradient(circle, transparent 40%, rgba(239, 68, 68, 0.4) 100%);
+  opacity: 0;
+  transition: opacity 0.1s ease;
+  z-index: 9999;
+}
+.death-flash-active {
+  opacity: 1;
+  animation: flashFade 0.6s ease-out forwards;
+}
+
+@keyframes flashFade {
+  0% { opacity: 0.8; }
+  100% { opacity: 0; }
+}
