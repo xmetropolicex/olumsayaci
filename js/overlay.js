@@ -3,6 +3,9 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Eski önbellekten kalan etiketleri kesin olarak temizle
+    document.querySelectorAll('.label-pill, #counterLabel').forEach(el => el.remove());
+
     const cardWrapper = document.getElementById('cardWrapper');
     const deathCard = document.getElementById('deathCard');
     const avatarImg = document.getElementById('avatarImg');

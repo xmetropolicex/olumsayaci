@@ -3,6 +3,9 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Eski önbellekten kalan etiketleri kesin olarak temizle
+    document.querySelectorAll('.label-pill, #previewCounterLabel, #counterLabel').forEach(el => el.remove());
+
     // URL'den veya Varsayılan Oda Kodu
     const urlParams = new URLSearchParams(window.location.search);
     const initialRoom = urlParams.get('room') || 'yayin-oda-1';
