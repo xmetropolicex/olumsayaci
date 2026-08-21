@@ -579,3 +579,166 @@ input:checked + .slider:before { transform: translateX(16px); }
   z-index: 99999;
 }
 .toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ==========================================================================
+   ÖZEL MOBİL UYGULAMA / STREAMDECK MOBİL GÖRÜNÜMÜ
+   ========================================================================== */
+
+@media (max-width: 680px) {
+  body {
+    padding: 8px 8px calc(28px + env(safe-area-inset-bottom));
+  }
+
+  .dashboard-container {
+    max-width: 100%;
+    gap: 12px;
+  }
+
+  /* Üst Navigasyon - Kompakt App Bar */
+  .top-nav {
+    padding: 10px 14px;
+    border-radius: 12px;
+  }
+  .brand-text h1 {
+    font-size: 14px;
+    font-weight: 900;
+  }
+  .brand-text p {
+    display: none;
+  }
+  .nav-actions {
+    gap: 6px;
+  }
+  .nav-actions .btn {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+
+  /* Sayaç Hero Bölümü - Devasa Touch Hedefleri */
+  .counter-hero {
+    padding: 20px 14px;
+    border-radius: 16px;
+  }
+  .counter-num-box {
+    margin: 4px 0 16px 0;
+  }
+  .counter-giant {
+    font-size: 82px;
+    font-weight: 900;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+  }
+
+  /* Büyük +1 ÖLÜM Butonu */
+  .btn-primary-death {
+    padding: 18px 24px;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    border-radius: 14px;
+    margin-bottom: 12px;
+    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.5);
+    touch-action: manipulation;
+  }
+  .btn-primary-death:active {
+    transform: scale(0.95);
+    background: #b91c1c;
+  }
+
+  /* Hızlı İşlem Butonları (+5, -1, Sıfırla, Sayı) */
+  .quick-btn-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .quick-btn-grid .btn {
+    padding: 14px 6px;
+    font-size: 13px;
+    font-weight: 800;
+    border-radius: 10px;
+    touch-action: manipulation;
+  }
+
+  /* Yatay Kayan Oyun Çipleri */
+  .game-chips-scroll {
+    gap: 8px;
+    padding-bottom: 4px;
+  }
+  .chip {
+    padding: 8px 14px;
+    font-size: 12.5px;
+    font-weight: 800;
+    border-radius: 20px;
+  }
+
+  /* Form Alanları & Inputlar */
+  .card {
+    padding: 14px;
+    border-radius: 14px;
+  }
+  .card-title {
+    font-size: 13px;
+  }
+  .form-label {
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+  .input-box {
+    padding: 12px 14px;
+    font-size: 15px; /* iOS zoom engellemek için */
+    border-radius: 10px;
+  }
+
+  /* Tema & Düzen Seçiciler */
+  .theme-compact-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .theme-compact-opt {
+    padding: 12px 4px;
+    border-radius: 10px;
+  }
+  .theme-compact-opt h5 {
+    font-size: 11px;
+    font-weight: 800;
+  }
+
+  .layout-opt-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .layout-opt-btn {
+    padding: 12px 6px;
+    font-size: 12px;
+    font-weight: 800;
+    border-radius: 10px;
+  }
+
+  /* Switch / Efekt Toggle Öğeleri */
+  .toggle-item {
+    padding: 12px 14px;
+    font-size: 13.5px;
+    font-weight: 700;
+    border-radius: 12px;
+    margin-bottom: 8px;
+  }
+  .switch {
+    width: 44px;
+    height: 24px;
+  }
+  .slider:before {
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+  }
+  input:checked + .slider:before {
+    transform: translateX(20px);
+  }
+
+  /* Canlı Önizleme Kutusu */
+  .live-preview-box {
+    padding: 22px 8px;
+    min-height: 110px;
+    overflow-x: auto;
+  }
+}
