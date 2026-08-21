@@ -1,6 +1,6 @@
 /**
- * OBS Ölüm Sayacı - Hibrit Senkronizasyon Motoru (SyncEngine)
- * Döngü (Loop) korumalı, anlık yerel & bulut senkronizasyonu
+ * OBS Ölüm Sayacı - Senkronizasyon Motoru (SyncEngine)
+ * Anında ve kesintisiz çift yönlü eşitleme
  */
 
 class SyncEngine {
@@ -23,8 +23,8 @@ class SyncEngine {
             characterName: 'TARNISHED',
             deaths: 0,
             avatarUrl: 'assets/presets/elden_ring.svg',
-            theme: 'souls', // souls, cyberpunk, glass, retro, esports, gold
-            layout: 'horizontal', // horizontal, vertical, compact
+            theme: 'souls',
+            layout: 'horizontal',
             accentColor: '#ef4444',
             counterLabel: 'ÖLÜM SAYISI',
             shakeEffect: false,
@@ -44,35 +44,34 @@ class SyncEngine {
         // 1. LocalStorage'dan mevcut durumu yükle
         this.loadLocalState();
 
-        // 2. BroadcastChannel'ı başlat (Aynı tarayıcı / OBS için)
+        // 2. BroadcastChannel'ı başlat (Aynı PC / OBS için 0ms)
         if (typeof BroadcastChannel !== 'undefined') {
             try {
                 this.broadcastChannel = new BroadcastChannel(`death_counter_bc_${this.roomId}`);
                 this.broadcastChannel.onmessage = (event) => {
-                    this.handleIncomingMessage(event.data, 'local');
+                    if (event.data) {
+                        this.handleIncomingMessage(event.data, 'local');
+                    }
                 };
             } catch (e) {
                 console.warn("BroadcastChannel başlatılamadı:", e);
             }
         }
 
-        // 3. Storage Event (Sekmeler arası)
+        // 3. Storage Event (Sekmeler arası anında tetikleme)
         window.addEventListener('storage', (e) => {
             if (e.key === this.storageKey && e.newValue) {
                 try {
                     const parsed = JSON.parse(e.newValue);
-                    if (parsed && parsed.updatedAt > this.state.updatedAt) {
-                        this.handleIncomingMessage({
-                            type: 'STATE_UPDATE',
-                            state: parsed,
-                            instanceId: 'storage'
-                        }, 'storage');
+                    if (parsed) {
+                        this.state = { ...this.state, ...parsed };
+                        this.onStateChange(this.state, 'storage');
                     }
                 } catch (err) {}
             }
         });
 
-        // 4. MQTT WebSockets
+        // 4. MQTT WebSockets Bulut Bağlantısı (Telefon & Netlify için)
         this.initMqtt();
     }
 
@@ -126,7 +125,7 @@ class SyncEngine {
     connectMqtt() {
         if (typeof mqtt === 'undefined') return;
 
-        const topic = `death_counter_room_v3/${this.roomId}`;
+        const topic = `death_counter_room_v4/${this.roomId}`;
         const clientId = `dc_${Math.random().toString(16).substr(2, 8)}`;
         
         const brokers = [
@@ -202,7 +201,7 @@ class SyncEngine {
 
         // 2. MQTT (Uzak cihazlar)
         if (this.mqttClient && this.isConnectedMqtt) {
-            const topic = `death_counter_room_v3/${this.roomId}`;
+            const topic = `death_counter_room_v4/${this.roomId}`;
             try {
                 this.mqttClient.publish(topic, JSON.stringify(payload));
             } catch (e) {}
@@ -212,13 +211,8 @@ class SyncEngine {
     handleIncomingMessage(message, source) {
         if (!message || !message.type) return;
 
-        // Kendi gönderdiğimiz mesajları yut (Döngü engelleme)
+        // Kendi sekmemizin gönderdiği mesajı tekrar işlememek için kontrol
         if (message.instanceId === this.instanceId) return;
-
-        // Eski/stale durum mesajlarını yut
-        if (message.state && message.state.updatedAt && message.state.updatedAt < this.state.updatedAt) {
-            return;
-        }
 
         switch (message.type) {
             case 'STATE_UPDATE':
@@ -313,11 +307,13 @@ class SyncEngine {
             this.broadcastChannel.close();
             this.broadcastChannel = new BroadcastChannel(`death_counter_bc_${this.roomId}`);
             this.broadcastChannel.onmessage = (event) => {
-                this.handleIncomingMessage(event.data, 'local');
+                if (event.data) {
+                    this.handleIncomingMessage(event.data, 'local');
+                }
             };
         }
         if (this.mqttClient && this.isConnectedMqtt) {
-            this.mqttClient.subscribe(`death_counter_room_v3/${this.roomId}`);
+            this.mqttClient.subscribe(`death_counter_room_v4/${this.roomId}`);
         }
         this.onStateChange(this.state, 'room_change');
     }
