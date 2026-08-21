@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const charNameEl = document.getElementById('charName');
     const counterValueEl = document.getElementById('counterValue');
     const counterSection = document.getElementById('counterSection');
-    const flashOverlay = document.getElementById('flashOverlay');
 
     let currentDeaths = 0;
 
@@ -96,13 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // 4. Kuru Kafa Patlama & Buhar (Pof) Efekti
         if (!state || state.flashEffect !== false) {
             spawnSkullBurst();
-        }
-
-        // 5. Ekran Parlaması
-        if (flashOverlay && (!state || state.flashEffect !== false)) {
-            flashOverlay.classList.remove('death-flash-active');
-            void flashOverlay.offsetWidth;
-            flashOverlay.classList.add('death-flash-active');
         }
     }
 
