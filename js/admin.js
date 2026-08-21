@@ -457,7 +457,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const overlayUrl = `${baseUrl}/overlay.html?room=${encodeURIComponent(room)}`;
 
         navigator.clipboard.writeText(overlayUrl).then(() => {
-            showToast('📋 OBS Tarayıcı Kaynağı Linki Kopyalandı!');
+            showToast('📋 OBS Linki Kopyalandı! (Önerilen OBS: 500x220 veya 1920x1080)');
         }).catch(() => {
             prompt('OBS Linkinizi kopyalayın:', overlayUrl);
         });

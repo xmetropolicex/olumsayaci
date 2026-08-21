@@ -24,7 +24,8 @@ body.overlay-mode {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  padding: 8px;
+  padding: 28px 24px; /* Üst rozet ve parçacıkların OBS pencere sınırında kesilmesini kesin olarak önler */
+  box-sizing: border-box;
   user-select: none;
 }
 
@@ -558,21 +559,22 @@ body.overlay-mode {
   color: #fbbf24;
 }
 
-/* ================= DÜZENLER (LAYOUTS) ================= */
+/* ================= DÜZENLER (STANDARTLAŞTIRILMIŞ BOYUTLAR) ================= */
 
-/* 1. Yatay Standart Kart (Horizontal) */
+/* 1. Yatay Standart Kart (Horizontal) - Önerilen OBS: 500 x 220 */
 .layout-horizontal .death-card {
   padding: 12px 18px 10px 14px;
+  min-width: 320px;
 }
 
-/* 2. Dikey Kart (Vertical) */
+/* 2. Dikey Kart (Vertical) - Önerilen OBS: 300 x 380 */
 .layout-vertical .death-card {
   flex-direction: column;
   align-items: center;
   text-align: center;
   padding: 22px 20px 16px 20px;
   gap: 10px;
-  min-width: 150px;
+  width: 190px;
 }
 .layout-vertical .avatar-container {
   width: 68px;
@@ -583,6 +585,7 @@ body.overlay-mode {
 }
 .layout-vertical .game-title {
   font-size: 16px;
+  max-width: 170px;
 }
 .layout-vertical .char-name {
   font-size: 14px;
@@ -600,7 +603,7 @@ body.overlay-mode {
   font-size: 46px;
 }
 
-/* 3. Kompakt Rozet (Compact Pill) */
+/* 3. Kompakt Rozet (Compact Pill) - Önerilen OBS: 500 x 220 */
 .layout-compact .card-top-tag {
   top: -10px;
   font-size: 8px;
@@ -617,6 +620,7 @@ body.overlay-mode {
   padding: 11px 16px 7px 10px;
   gap: 10px;
   border-radius: 30px;
+  min-width: 290px;
 }
 .layout-compact .avatar-container {
   width: 36px;
@@ -640,11 +644,11 @@ body.overlay-mode {
   font-size: 28px;
 }
 
-/* 4. Boss Bar Düzeni (Boss) */
+/* 4. Boss Bar Düzeni (Boss) - Önerilen OBS: 600 x 220 */
 .layout-boss .death-card {
   padding: 12px 24px;
   border-radius: 8px;
-  min-width: 300px;
+  min-width: 380px;
 }
 
 /* ================= ANİMASYONLAR ================= */
