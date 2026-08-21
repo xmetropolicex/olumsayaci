@@ -1,6 +1,6 @@
 /**
  * OBS Ölüm Sayacı - Senkronizasyon Motoru (SyncEngine)
- * Anında, çift yönlü ve deduplication (çift tetikleme engelli) eşitleme
+ * Çoklu Cihaz (PC + Telefon + OBS) Çakışma ve Sıfırlanma Korumalı
  */
 
 class SyncEngine {
@@ -30,7 +30,8 @@ class SyncEngine {
             shakeEffect: true,
             flashEffect: true,
             particlesEnabled: true,
-            updatedAt: Date.now()
+            hasUserModified: false,
+            updatedAt: 0
         };
 
         this.init();
@@ -70,7 +71,7 @@ class SyncEngine {
             if (e.key === this.storageKey && e.newValue) {
                 try {
                     const parsed = JSON.parse(e.newValue);
-                    if (parsed) {
+                    if (parsed && parsed.updatedAt >= this.state.updatedAt) {
                         this.state = { ...this.state, ...parsed };
                         this.onStateChange(this.state, 'storage');
                     }
@@ -137,7 +138,7 @@ class SyncEngine {
     connectMqtt() {
         if (typeof mqtt === 'undefined') return;
 
-        const topic = `death_counter_room_v5/${this.roomId}`;
+        const topic = `death_counter_room_v6/${this.roomId}`;
         const clientId = `dc_${Math.random().toString(16).substr(2, 8)}`;
         
         const brokers = [
@@ -169,11 +170,8 @@ class SyncEngine {
 
                     this.mqttClient.subscribe(topic, { qos: 0 }, (err) => {
                         if (!err) {
-                            if (!this.isHost) {
-                                this.sendMessage({ type: 'REQUEST_STATE' });
-                            } else {
-                                this.broadcastState();
-                            }
+                            // Yeni bağlanan her cihaz (telefon/sekme) mevcut oturumun durumunu talep eder
+                            this.sendMessage({ type: 'REQUEST_STATE' });
                         }
                     });
                 });
@@ -216,9 +214,9 @@ class SyncEngine {
             } catch (e) {}
         }
 
-        // 2. MQTT (Uzak cihazlar)
+        // 2. MQTT (Uzak cihazlar & Telefon)
         if (this.mqttClient && this.isConnectedMqtt) {
-            const topic = `death_counter_room_v5/${this.roomId}`;
+            const topic = `death_counter_room_v6/${this.roomId}`;
             try {
                 this.mqttClient.publish(topic, JSON.stringify(payload));
             } catch (e) {}
@@ -260,8 +258,12 @@ class SyncEngine {
                 break;
 
             case 'REQUEST_STATE':
-                if (this.isHost) {
-                    this.broadcastState();
+                // Sadece verisi olan ve kullanıcı tarafından değiştirilmiş aktif istemci yanıt verir
+                if (this.state && (this.state.hasUserModified || this.state.deaths > 0 || this.state.updatedAt > 0)) {
+                    this.sendMessage({
+                        type: 'STATE_UPDATE',
+                        state: this.state
+                    });
                 }
                 break;
 
@@ -279,6 +281,7 @@ class SyncEngine {
         this.state = {
             ...this.state,
             ...partialState,
+            hasUserModified: true,
             updatedAt: Date.now()
         };
 
@@ -340,7 +343,8 @@ class SyncEngine {
             };
         }
         if (this.mqttClient && this.isConnectedMqtt) {
-            this.mqttClient.subscribe(`death_counter_room_v5/${this.roomId}`);
+            this.mqttClient.subscribe(`death_counter_room_v6/${this.roomId}`);
+            this.sendMessage({ type: 'REQUEST_STATE' });
         }
         this.onStateChange(this.state, 'room_change');
     }
