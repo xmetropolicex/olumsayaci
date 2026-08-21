@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OBS Ölüm Sayacı - Canlı Yayın Overlay</title>
-  <link rel="stylesheet" href="css/overlay.css?v=2.0">
+  <link rel="stylesheet" href="css/overlay.css?v=2.1">
   <!-- MQTT CDN -->
   <script src="https://unpkg.com/mqtt@4.3.7/dist/mqtt.min.js"></script>
 </head>
@@ -13,15 +13,20 @@
   <div id="cardWrapper" class="death-card-wrapper theme-souls layout-horizontal">
     <div id="deathCard" class="death-card">
       
+      <!-- Üst Şık Başlık Rozeti -->
+      <div class="card-top-tag">
+        <span class="tag-pulse"></span>
+        <span>ÖLÜM SAYACI</span>
+      </div>
+
       <!-- Arka Plan Saydam Logo / Watermark -->
       <div class="card-bg-watermark">
         <img id="bgWatermarkImg" class="bg-watermark-img" src="assets/presets/elden_ring.svg" alt="" />
       </div>
 
-      <!-- Avatar / Oyun Posteri Bölümü -->
+      <!-- Avatar / Oyun Posteri Bölümü (Temiz & Engellemesiz) -->
       <div class="avatar-container">
         <img id="avatarImg" class="avatar-img" src="assets/presets/elden_ring.svg" alt="Oyun Posteri" />
-        <span class="avatar-badge">LIVE</span>
       </div>
 
       <!-- Oyun ve Yayıncı Bilgisi -->
@@ -39,7 +44,7 @@
   </div>
 
   <!-- Scriptler -->
-  <script src="js/sync.js?v=2.0"></script>
-  <script src="js/overlay.js?v=2.0"></script>
+  <script src="js/sync.js?v=2.1"></script>
+  <script src="js/overlay.js?v=2.1"></script>
 </body>
 </html>

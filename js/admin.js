@@ -438,9 +438,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // QR Kod Modalı
     btnQrCode.addEventListener('click', () => {
-        const currentUrl = window.location.href;
-        document.getElementById('qrUrlText').textContent = currentUrl;
-        generateQrCode(currentUrl);
+        const room = roomInput.value.trim() || 'yayin-oda-1';
+        let panelUrl = `https://olumsayaci.netlify.app/?room=${encodeURIComponent(room)}`;
+        
+        if (window.location.protocol.startsWith('http')) {
+            const baseUrl = window.location.href.split('?')[0].replace('index.html', '').replace(/\/$/, '');
+            panelUrl = `${baseUrl}/?room=${encodeURIComponent(room)}`;
+        }
+        
+        document.getElementById('qrUrlText').textContent = panelUrl;
+        generateQrCode(panelUrl);
         openModal(qrModal);
     });
 

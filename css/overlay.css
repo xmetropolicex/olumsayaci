@@ -73,6 +73,43 @@ body.overlay-mode {
   transition: opacity 0.3s ease;
 }
 
+/* ================= ÜST BAŞLIK ROZETİ (ÖLÜM SAYACI) ================= */
+.card-top-tag {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--card-bg);
+  border: 1.5px solid var(--card-border);
+  padding: 1px 9px;
+  border-radius: 20px;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: var(--accent);
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+  white-space: nowrap;
+}
+
+.tag-pulse {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 5px var(--accent);
+  animation: pulseTag 1.8s infinite ease-in-out;
+}
+
+@keyframes pulseTag {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
 /* ================= GÖRSEL & AVATAR ALANI ================= */
 .avatar-container {
   position: relative;
@@ -94,19 +131,6 @@ body.overlay-mode {
   height: 100%;
   object-fit: cover;
   display: block;
-}
-
-.avatar-badge {
-  position: absolute;
-  bottom: 0px;
-  right: 0px;
-  background: var(--accent);
-  color: #fff;
-  font-size: 8px;
-  font-weight: 900;
-  padding: 1px 4px;
-  border-radius: 4px 0 0 0;
-  letter-spacing: 0.5px;
 }
 
 /* ================= OYUN & YAYINCI BİLGİ ALANI ================= */
