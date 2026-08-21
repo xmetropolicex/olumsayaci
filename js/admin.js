@@ -34,12 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const imageUrlInput = document.getElementById('imageUrlInput');
     const btnApplyImageUrl = document.getElementById('btnApplyImageUrl');
 
-    // Efektler & Boyut
+    // Efektler
     const shakeToggle = document.getElementById('shakeToggle');
     const flashToggle = document.getElementById('flashToggle');
     const particlesToggle = document.getElementById('particlesToggle');
-    const scaleSlider = document.getElementById('scaleSlider');
-    const scaleValText = document.getElementById('scaleValText');
 
     // Canlı Önizleme Kartı Elementleri
     const previewWrapper = document.getElementById('previewWrapper');
@@ -119,10 +117,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (shakeToggle) shakeToggle.checked = state.shakeEffect !== false;
         if (flashToggle) flashToggle.checked = state.flashEffect !== false;
         if (particlesToggle) particlesToggle.checked = state.particlesEnabled !== false;
-        if (scaleSlider) {
-            scaleSlider.value = state.scale || 100;
-            if (scaleValText) scaleValText.textContent = `%${state.scale || 100}`;
-        }
     }
 
     // 3. Mini Canlı Önizleme Kartını Güncelleme
@@ -365,11 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sync.updateState({ particlesEnabled: e.target.checked });
     });
 
-    scaleSlider.addEventListener('input', (e) => {
-        const val = parseInt(e.target.value, 10);
-        scaleValText.textContent = `%${val}`;
-        sync.updateState({ scale: val });
-    });
+
 
     // ================= ODA VE BAĞLANTI YÖNETİMİ =================
     roomInput.addEventListener('change', (e) => {
