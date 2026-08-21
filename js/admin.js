@@ -140,35 +140,54 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function triggerPreviewEffects(delta, state) {
-        if (!previewCounterVal) return;
-        previewCounterVal.classList.remove('pop-anim');
-        void previewCounterVal.offsetWidth;
-        previewCounterVal.classList.add('pop-anim');
+        const deltaNum = parseInt(delta, 10) || 1;
 
-        if (state.shakeEffect && previewCard) {
+        if (previewCounterVal) {
+            previewCounterVal.classList.remove('pop-anim');
+            void previewCounterVal.offsetWidth;
+            previewCounterVal.classList.add('pop-anim');
+        }
+
+        if (previewCard && (!state || state.shakeEffect !== false)) {
             previewCard.classList.remove('shake-anim');
             void previewCard.offsetWidth;
             previewCard.classList.add('shake-anim');
         }
 
         const previewCounterSec = document.querySelector('.live-preview-box .counter-section');
-        if (previewCounterSec && state.flashEffect !== false) {
-            const container = document.createElement('div');
-            container.className = 'skull-burst-container';
-            container.innerHTML = `
-              <svg class="skull-burst-icon" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12C2 15.5 3.79 18.57 6.5 20.35V22H17.5V20.35C20.21 18.57 22 15.5 22 12C22 6.48 17.52 2 12 2ZM9 11C8.17 11 7.5 10.33 7.5 9.5C7.5 8.67 8.17 8 9 8C9.83 8 10.5 8.67 10.5 9.5C10.5 10.33 9.83 11 9 11ZM15 11C14.17 11 13.5 10.33 13.5 9.5C13.5 8.67 14.17 8 15 8C15.83 8 16.5 8.67 16.5 9.5C16.5 10.33 15.83 11 15 11ZM9.5 18H8V15.5H9.5V18ZM12.75 18H11.25V15.5H12.75V18ZM16 18H14.5V15.5H16V18Z"/>
-              </svg>
-              <div class="smoke-ring"></div>
-              <div class="smoke-puff p1"></div>
-              <div class="smoke-puff p2"></div>
-              <div class="smoke-puff p3"></div>
-              <div class="smoke-puff p4"></div>
-            `;
-            previewCounterSec.appendChild(container);
-            setTimeout(() => {
-                if (container.parentNode) container.parentNode.removeChild(container);
-            }, 800);
+        if (previewCounterSec) {
+            // 1. Yüzen +1 Parçacığı
+            if (!state || state.particlesEnabled !== false) {
+                const particle = document.createElement('div');
+                particle.className = 'floating-delta';
+                particle.textContent = `+${deltaNum}`;
+                previewCounterSec.appendChild(particle);
+                setTimeout(() => {
+                    if (particle.parentNode) particle.parentNode.removeChild(particle);
+                }, 900);
+            }
+
+            // 2. Kuru Kafa Patlama & Buhar (Pof) Efekti
+            if (!state || state.flashEffect !== false) {
+                const container = document.createElement('div');
+                container.className = 'skull-burst-container';
+                container.innerHTML = `
+                  <svg class="skull-burst-icon" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12C2 15.5 3.79 18.57 6.5 20.35V22H17.5V20.35C20.21 18.57 22 15.5 22 12C22 6.48 17.52 2 12 2ZM9 11C8.17 11 7.5 10.33 7.5 9.5C7.5 8.67 8.17 8 9 8C9.83 8 10.5 8.67 10.5 9.5C10.5 10.33 9.83 11 9 11ZM15 11C14.17 11 13.5 10.33 13.5 9.5C13.5 8.67 14.17 8 15 8C15.83 8 16.5 8.67 16.5 9.5C16.5 10.33 15.83 11 15 11ZM9.5 18H8V15.5H9.5V18ZM12.75 18H11.25V15.5H12.75V18ZM16 18H14.5V15.5H16V18Z"/>
+                  </svg>
+                  <div class="smoke-ring"></div>
+                  <div class="smoke-puff p1"></div>
+                  <div class="smoke-puff p2"></div>
+                  <div class="smoke-puff p3"></div>
+                  <div class="smoke-puff p4"></div>
+                  <div class="smoke-puff p5"></div>
+                  <div class="smoke-puff p6"></div>
+                `;
+                previewCounterSec.appendChild(container);
+                setTimeout(() => {
+                    if (container.parentNode) container.parentNode.removeChild(container);
+                }, 850);
+            }
         }
     }
 
