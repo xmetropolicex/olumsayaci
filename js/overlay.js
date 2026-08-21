@@ -87,22 +87,26 @@ document.addEventListener('DOMContentLoaded', () => {
             deathCard.classList.add('shake-anim');
         }
 
-        // 3. Yüzen Parçacık (+1 / Delta)
+        // 3. Yüzen Parçacık (+1 / -1)
         if (!state || state.particlesEnabled !== false) {
-            spawnFloatingDelta(deltaNum);
+            spawnFloatingDelta(deltaNum, deltaNum < 0 ? 'decrease' : 'increase');
         }
 
-        // 4. Kuru Kafa Patlama & Buhar (Pof) Efekti
+        // 4. Kuru Kafa / Yeşil Artı Şifa Efekti
         if (!state || state.flashEffect !== false) {
-            spawnSkullBurst();
+            if (deltaNum < 0) {
+                spawnHealBurst();
+            } else {
+                spawnSkullBurst();
+            }
         }
     }
 
-    function spawnFloatingDelta(delta) {
+    function spawnFloatingDelta(delta, type = 'increase') {
         if (!counterSection) return;
         const particle = document.createElement('div');
-        particle.className = 'floating-delta';
-        particle.textContent = `+${delta}`;
+        particle.className = `floating-delta ${type}`;
+        particle.textContent = delta > 0 ? `+${delta}` : `${delta}`;
         counterSection.appendChild(particle);
 
         setTimeout(() => {
@@ -112,13 +116,50 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 900);
     }
 
+    function spawnHealBurst() {
+        if (!counterSection) return;
+        const container = document.createElement('div');
+        container.className = 'heal-burst-container';
+        container.innerHTML = `
+          <svg class="heal-burst-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="32" r="28" fill="rgba(16, 185, 129, 0.25)" stroke="#10b981" stroke-width="3"/>
+            <path d="M38 18H26V26H18V38H26V46H38V38H46V26H38V18Z" fill="#34D399" stroke="#10B981" stroke-width="2"/>
+          </svg>
+          <div class="heal-ring"></div>
+        `;
+        counterSection.appendChild(container);
+
+        setTimeout(() => {
+            if (container.parentNode) {
+                container.parentNode.removeChild(container);
+            }
+        }, 1700);
+    }
+
     function spawnSkullBurst() {
         if (!counterSection) return;
         const container = document.createElement('div');
         container.className = 'skull-burst-container';
         container.innerHTML = `
-          <svg class="skull-burst-icon" viewBox="0 0 24 24">
-            <path d="M12 2C6.48 2 2 6.48 2 12C2 15.5 3.79 18.57 6.5 20.35V22H17.5V20.35C20.21 18.57 22 15.5 22 12C22 6.48 17.52 2 12 2ZM9 11C8.17 11 7.5 10.33 7.5 9.5C7.5 8.67 8.17 8 9 8C9.83 8 10.5 8.67 10.5 9.5C10.5 10.33 9.83 11 9 11ZM15 11C14.17 11 13.5 10.33 13.5 9.5C13.5 8.67 14.17 8 15 8C15.83 8 16.5 8.67 16.5 9.5C16.5 10.33 15.83 11 15 11ZM9.5 18H8V15.5H9.5V18ZM12.75 18H11.25V15.5H12.75V18ZM16 18H14.5V15.5H16V18Z"/>
+          <svg class="skull-burst-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Kafatası Ana Gövdesi -->
+            <path d="M32 4C17.64 4 6 15.64 6 30C6 38.2 9.8 45.5 15.8 50.2V56C15.8 58.2 17.6 60 19.8 60H44.2C46.4 60 48.2 58.2 48.2 56V50.2C54.2 45.5 58 38.2 58 30C58 15.64 46.36 4 32 4Z" fill="#F8FAFC"/>
+            <!-- Kafatası Çatlak Detayı -->
+            <path d="M30 6L33 14L28 20L31 24" stroke="#334155" stroke-width="1.8" stroke-linecap="round"/>
+            <!-- Derin Karanlık Göz Çukurları -->
+            <ellipse cx="21" cy="31" rx="7.5" ry="9" fill="#090A0F"/>
+            <ellipse cx="43" cy="31" rx="7.5" ry="9" fill="#090A0F"/>
+            <!-- Burun Boşluğu -->
+            <path d="M32 36L28.5 45H35.5L32 36Z" fill="#090A0F"/>
+            <!-- Elmacık Kemiği Çizgileri -->
+            <path d="M13 41C13 41 16 43 18 41" stroke="#64748B" stroke-width="2" stroke-linecap="round"/>
+            <path d="M51 41C51 41 48 43 46 41" stroke="#64748B" stroke-width="2" stroke-linecap="round"/>
+            <!-- Çene ve Dişler -->
+            <rect x="20" y="51" width="4" height="7" rx="1.5" fill="#090A0F"/>
+            <rect x="26" y="50" width="4" height="8" rx="1.5" fill="#090A0F"/>
+            <rect x="34" y="50" width="4" height="8" rx="1.5" fill="#090A0F"/>
+            <rect x="40" y="51" width="4" height="7" rx="1.5" fill="#090A0F"/>
+            <line x1="18" y1="54" x2="46" y2="54" stroke="#090A0F" stroke-width="1.5"/>
           </svg>
           <div class="smoke-ring"></div>
           <div class="smoke-ring ring-delayed"></div>
@@ -135,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (container.parentNode) {
                 container.parentNode.removeChild(container);
             }
-        }, 2000);
+        }, 1700);
     }
 
     // İlk yüklemede mevcut durumu render et

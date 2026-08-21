@@ -336,7 +336,7 @@ class SyncEngine {
 
     decrementDeath(amount = 1) {
         const newDeaths = Math.max(0, (parseInt(this.state.deaths, 10) || 0) - amount);
-        this.updateState({ deaths: newDeaths }, false, -amount);
+        this.updateState({ deaths: newDeaths }, true, -amount);
     }
 
     resetDeaths() {
