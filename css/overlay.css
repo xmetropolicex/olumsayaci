@@ -15,14 +15,8 @@
   --scale-factor: 1;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  user-select: none;
-}
-
-body {
+/* Sadece OBS Overlay sayfasındayken body'i şeffaf ve sabit yap */
+body.overlay-mode {
   background-color: transparent !important;
   font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   color: var(--text-main);
@@ -32,7 +26,8 @@ body {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  padding: 24px;
+  padding: 20px;
+  user-select: none;
 }
 
 /* ================= ANA KART KAPSAYICISI ================= */
@@ -48,27 +43,27 @@ body {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 12px 20px 12px 14px;
+  gap: 14px;
+  padding: 10px 18px 10px 12px;
   background: var(--card-bg);
   border: 2px solid var(--card-border);
-  border-radius: 16px;
+  border-radius: 14px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px var(--accent-glow);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ================= GÖRSEL & AVATAR ALANI ================= */
 .avatar-container {
   position: relative;
-  width: 64px;
-  height: 64px;
-  border-radius: 12px;
+  width: 58px;
+  height: 58px;
+  border-radius: 10px;
   overflow: hidden;
   flex-shrink: 0;
   border: 2px solid var(--accent);
-  box-shadow: 0 0 14px var(--accent-glow);
+  box-shadow: 0 0 12px var(--accent-glow);
   background: #090a0f;
   display: flex;
   align-items: center;
@@ -84,15 +79,15 @@ body {
 
 .avatar-badge {
   position: absolute;
-  bottom: -2px;
-  right: -2px;
+  bottom: 0px;
+  right: 0px;
   background: var(--accent);
   color: #fff;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 900;
-  padding: 1px 5px;
-  border-radius: 6px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  padding: 1px 4px;
+  border-radius: 4px 0 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.6);
 }
 
 /* ================= OYUN & BİLGİ ALANI ================= */
@@ -104,20 +99,20 @@ body {
 }
 
 .game-title {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 800;
   letter-spacing: 0.5px;
   text-transform: uppercase;
   color: var(--text-main);
   white-space: nowrap;
-  max-width: 180px;
+  max-width: 170px;
   overflow: hidden;
   text-overflow: ellipsis;
   text-shadow: 0 2px 4px rgba(0,0,0,0.8);
 }
 
 .char-name {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   color: var(--text-muted);
   text-transform: uppercase;
@@ -129,22 +124,22 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  margin-top: 4px;
+  margin-top: 3px;
   font-size: 10px;
   font-weight: 800;
   color: var(--accent);
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
 }
 
 .label-pill::before {
   content: '';
   display: inline-block;
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   background: var(--accent);
   border-radius: 50%;
-  box-shadow: 0 0 8px var(--accent);
+  box-shadow: 0 0 6px var(--accent);
   animation: pulse-dot 1.5s infinite alternate;
 }
 
@@ -155,14 +150,14 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-left: 14px;
+  padding-left: 12px;
   border-left: 1.5px solid rgba(255, 255, 255, 0.12);
-  min-width: 65px;
+  min-width: 60px;
 }
 
 .skull-icon {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   fill: var(--accent);
   filter: drop-shadow(0 0 6px var(--accent-glow));
   margin-bottom: -2px;
@@ -170,7 +165,7 @@ body {
 
 .counter-value {
   font-family: 'Teko', sans-serif;
-  font-size: 48px;
+  font-size: 46px;
   line-height: 0.95;
   font-weight: 700;
   color: #ffffff;
@@ -184,7 +179,7 @@ body {
   top: -10px;
   right: -8px;
   font-family: 'Outfit', sans-serif;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 900;
   color: #ff4757;
   text-shadow: 0 0 10px rgba(255, 71, 87, 0.9), 0 2px 4px #000;
@@ -193,22 +188,10 @@ body {
 }
 
 @keyframes floatUp {
-  0% {
-    opacity: 0;
-    transform: translateY(10px) scale(0.6);
-  }
-  20% {
-    opacity: 1;
-    transform: translateY(-5px) scale(1.25);
-  }
-  70% {
-    opacity: 0.9;
-    transform: translateY(-25px) scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-45px) scale(0.8);
-  }
+  0% { opacity: 0; transform: translateY(8px) scale(0.6); }
+  20% { opacity: 1; transform: translateY(-4px) scale(1.25); }
+  70% { opacity: 0.9; transform: translateY(-22px) scale(1); }
+  100% { opacity: 0; transform: translateY(-40px) scale(0.8); }
 }
 
 /* ================= TEMALAR ================= */
@@ -228,12 +211,12 @@ body {
 }
 .theme-souls .game-title {
   font-family: 'Cinzel', serif;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
   color: #f1faee;
 }
 .theme-souls .counter-value {
   font-family: 'Cinzel', serif;
-  font-size: 38px;
+  font-size: 36px;
   color: #ff4d4d;
 }
 
@@ -249,7 +232,7 @@ body {
   border-radius: 4px;
   border: 2px solid #00f3ff;
   box-shadow: 0 0 15px rgba(0, 243, 255, 0.5), inset 0 0 15px rgba(255, 0, 127, 0.2);
-  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
 }
 .theme-cyberpunk .avatar-container {
   border-radius: 4px;
@@ -264,7 +247,7 @@ body {
 .theme-cyberpunk .counter-value {
   font-family: 'Rajdhani', sans-serif;
   font-weight: 900;
-  font-size: 42px;
+  font-size: 40px;
   color: #ff007f;
   text-shadow: 0 0 15px #ff007f;
 }
@@ -273,19 +256,19 @@ body {
 .theme-glass {
   --accent: #6366f1;
   --accent-glow: rgba(99, 102, 241, 0.5);
-  --card-bg: rgba(255, 255, 255, 0.07);
+  --card-bg: rgba(255, 255, 255, 0.08);
   --card-border: rgba(255, 255, 255, 0.18);
   font-family: 'Outfit', sans-serif;
 }
 .theme-glass .death-card {
-  border-radius: 20px;
+  border-radius: 18px;
   border: 1.5px solid rgba(255, 255, 255, 0.22);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), 0 0 20px rgba(99, 102, 241, 0.3);
 }
 .theme-glass .counter-value {
   color: #ffffff;
   font-family: 'Outfit', sans-serif;
-  font-size: 38px;
+  font-size: 36px;
   font-weight: 900;
 }
 
@@ -299,21 +282,20 @@ body {
 }
 .theme-retro .death-card {
   border-radius: 0;
-  border: 4px solid #facc15;
-  box-shadow: 6px 6px 0px #000000;
+  border: 3px solid #facc15;
+  box-shadow: 5px 5px 0px #000000;
   image-rendering: pixelated;
-  padding: 10px 16px;
+  padding: 8px 14px;
 }
 .theme-retro .avatar-container {
   border-radius: 0;
-  border: 3px solid #facc15;
+  border: 2px solid #facc15;
   box-shadow: none;
 }
 .theme-retro .game-title {
   font-family: 'Press Start 2P', monospace;
-  font-size: 11px;
+  font-size: 10px;
   color: #facc15;
-  letter-spacing: 0;
 }
 .theme-retro .char-name {
   font-family: 'Press Start 2P', monospace;
@@ -322,7 +304,7 @@ body {
 }
 .theme-retro .counter-value {
   font-family: 'Press Start 2P', monospace;
-  font-size: 26px;
+  font-size: 24px;
   color: #ef4444;
 }
 
@@ -336,8 +318,8 @@ body {
 }
 .theme-esports .death-card {
   border-radius: 2px;
-  border-left: 6px solid #ff4655;
-  border-right: 2px solid rgba(255, 70, 85, 0.4);
+  border-left: 5px solid #ff4655;
+  border-right: 1.5px solid rgba(255, 70, 85, 0.4);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 10px 25px rgba(0,0,0,0.8), 0 0 15px rgba(255, 70, 85, 0.3);
@@ -345,12 +327,12 @@ body {
 .theme-esports .game-title {
   font-family: 'Rajdhani', sans-serif;
   font-weight: 900;
-  font-size: 18px;
+  font-size: 16px;
   color: #ece8e1;
 }
 .theme-esports .counter-value {
   font-family: 'Teko', sans-serif;
-  font-size: 52px;
+  font-size: 48px;
   color: #ff4655;
 }
 
@@ -381,13 +363,13 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 20px 24px;
-  gap: 12px;
-  min-width: 170px;
+  padding: 16px 20px;
+  gap: 10px;
+  min-width: 160px;
 }
 .layout-vertical .avatar-container {
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
 }
 .layout-vertical .info-section {
   align-items: center;
@@ -396,47 +378,34 @@ body {
   border-left: none;
   border-top: 1.5px solid rgba(255, 255, 255, 0.12);
   padding-left: 0;
-  padding-top: 10px;
+  padding-top: 8px;
   width: 100%;
 }
 
 /* Kompakt Rozet (Compact Pill) */
 .layout-compact .death-card {
-  padding: 6px 14px 6px 8px;
-  gap: 10px;
+  padding: 5px 12px 5px 6px;
+  gap: 8px;
   border-radius: 40px;
 }
 .layout-compact .avatar-container {
-  width: 38px;
-  height: 38px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
 }
 .layout-compact .game-title {
-  font-size: 13px;
-  max-width: 120px;
+  font-size: 12px;
+  max-width: 110px;
 }
 .layout-compact .char-name,
 .layout-compact .label-pill {
   display: none;
 }
 .layout-compact .counter-section {
-  padding-left: 10px;
+  padding-left: 8px;
 }
 .layout-compact .counter-value {
-  font-size: 32px;
-}
-
-/* Boss / Health Bar Style (Boss Banner) */
-.layout-boss .death-card {
-  min-width: 340px;
-  border-radius: 8px;
-  padding: 10px 18px;
-  background: linear-gradient(90deg, rgba(30, 5, 5, 0.95) 0%, rgba(10, 0, 0, 0.95) 100%);
-  border-bottom: 3px solid var(--accent);
-}
-.layout-boss .avatar-container {
-  width: 52px;
-  height: 52px;
+  font-size: 28px;
 }
 
 /* ================= ANİMASYONLAR ================= */
@@ -445,30 +414,27 @@ body {
   100% { transform: scale(1.3); opacity: 1; }
 }
 
-/* Ölüm Eklendiğinde Patlama / Pop Animasyonu */
 .pop-anim {
-  animation: deathPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: deathPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 @keyframes deathPop {
   0% { transform: scale(1); }
-  40% { transform: scale(1.38); filter: drop-shadow(0 0 20px var(--accent)); }
+  40% { transform: scale(1.35); filter: drop-shadow(0 0 20px var(--accent)); }
   100% { transform: scale(1); }
 }
 
-/* Kart Titremesi (Shake) */
 .shake-anim {
-  animation: cardShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  animation: cardShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 
 @keyframes cardShake {
   10%, 90% { transform: translate3d(-2px, 0, 0); }
   20%, 80% { transform: translate3d(4px, 0, 0); }
-  30%, 50%, 70% { transform: translate3d(-5px, 0, 0); }
-  40%, 60% { transform: translate3d(5px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
 }
 
-/* Kırmızı Ölüm Parıltısı (Red Vignette Flash) */
 .death-flash-overlay {
   position: fixed;
   top: 0;
@@ -483,7 +449,7 @@ body {
 }
 .death-flash-active {
   opacity: 1;
-  animation: flashFade 0.6s ease-out forwards;
+  animation: flashFade 0.5s ease-out forwards;
 }
 
 @keyframes flashFade {

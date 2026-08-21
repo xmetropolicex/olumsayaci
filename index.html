@@ -2,8 +2,8 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>OBS Canlı Yayın Ölüm Sayacı - Admin Kontrol Paneli</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OBS Ölüm Sayacı - Kontrol Paneli</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/overlay.css">
   <!-- MQTT CDN -->
@@ -13,285 +13,252 @@
 </head>
 <body>
 
-  <div class="container">
-    
-    <!-- ================= HEADER / ÜST BAR ================= -->
-    <header class="header">
-      <div class="logo-area">
-        <div class="logo-icon">
+  <div class="dashboard-container">
+
+    <!-- ================= ÜST BAR ================= -->
+    <header class="top-nav">
+      <div class="brand">
+        <div class="brand-icon">
           <svg viewBox="0 0 24 24">
             <path d="M12 2C6.48 2 2 6.48 2 12C2 15.5 3.79 18.57 6.5 20.35V22H17.5V20.35C20.21 18.57 22 15.5 22 12C22 6.48 17.52 2 12 2ZM9 11C8.17 11 7.5 10.33 7.5 9.5C7.5 8.67 8.17 8 9 8C9.83 8 10.5 8.67 10.5 9.5C10.5 10.33 9.83 11 9 11ZM15 11C14.17 11 13.5 10.33 13.5 9.5C13.5 8.67 14.17 8 15 8C15.83 8 16.5 8.67 16.5 9.5C16.5 10.33 15.83 11 15 11ZM9.5 18H8V15.5H9.5V18ZM12.75 18H11.25V15.5H12.75V18ZM16 18H14.5V15.5H16V18Z"/>
           </svg>
         </div>
-        <div class="logo-text">
+        <div class="brand-title">
           <h1>ÖLÜM SAYACI</h1>
-          <p>OBS Canlı Yayın & Kumanda Paneli</p>
+          <p>OBS Canlı Yayın Kontrolcüsü</p>
         </div>
       </div>
 
-      <!-- Oda & Bağlantı Butonları -->
-      <div class="header-actions">
-        <div style="display: flex; align-items: center; gap: 6px;">
-          <input type="text" id="roomInput" class="form-input" style="width: 130px; padding: 6px 10px; font-size: 12px;" placeholder="Oda Adı" title="Oda Adı / Room Code">
-          <button id="btnNewRoom" class="btn btn-secondary btn-sm" title="Yeni Rastgele Oda Oluştur">🎲 Yeni</button>
+      <div class="nav-controls">
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <input type="text" id="roomInput" class="input-box" style="width: 110px; padding: 5px 8px; font-size: 11px;" placeholder="Oda Adı">
+          <button id="btnNewRoom" class="btn btn-secondary btn-sm" title="Yeni Oda">🎲</button>
         </div>
 
-        <button id="btnQrCode" class="btn btn-secondary btn-sm" title="Telefondan Kontrol Etmek İçin QR Kodu Aç">
-          📱 Telefonla Kontrol (QR)
-        </button>
-
-        <button id="btnCopyObs" class="btn btn-accent btn-sm" title="OBS Browser Kaynağı URL'sini Kopyalar">
-          📋 OBS Linki Kopyala
+        <button id="btnCopyObs" class="btn btn-accent btn-sm" title="OBS Browser Kaynağı Linkini Kopyalar">
+          📋 OBS Linkini Kopyala
         </button>
 
         <button id="btnOpenOverlay" class="btn btn-secondary btn-sm" title="Overlay'i Yeni Sekmede Gör">
           🔗 Aç
         </button>
 
-        <div id="statusPill" class="status-pill">
+        <button id="btnQrCode" class="btn btn-secondary btn-sm" title="QR Kodu Göster">
+          📱 QR
+        </button>
+
+        <div id="statusPill" class="status-badge">
           <span class="status-dot"></span>
-          <span id="statusText">Bağlanıyor...</span>
+          <span id="statusText">Bağlandı</span>
         </div>
       </div>
     </header>
 
-    <!-- ================= ANA GRID ================= -->
-    <div class="main-grid">
-
-      <!-- HERO SAYAÇ KONTROL MERKEZİ -->
-      <div class="panel-card hero-counter-card">
-        <div class="counter-label-sub">CANLI YAYIN ÖLÜM SAYISI</div>
-        <div class="counter-display-wrapper">
-          <div id="heroDeathCount" class="counter-huge-number">0</div>
-        </div>
-
-        <!-- ANA DEV BUTON -->
-        <button id="btnHeroAdd" class="btn btn-primary-huge">
-          <svg viewBox="0 0 24 24">
-            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-          </svg>
-          +1 ÖLÜM EKLE
-        </button>
-
-        <!-- HIZLI AKSİYONLAR -->
-        <div class="quick-actions-row">
-          <button id="btnAdd5" class="btn btn-secondary">⚡ +5 Ekle</button>
-          <button id="btnSub1" class="btn btn-secondary">➖ -1 Düş</button>
-          <button id="btnManualSet" class="btn btn-secondary">✏️ Sayı Gir</button>
-          <button id="btnReset" class="btn btn-danger-outline">🔄 Sıfırla</button>
-        </div>
-        <div style="margin-top: 10px; font-size: 11px; color: var(--text-muted);">
-          💡 İpucu: Klavyenizden <b style="color:#fff;">[Numpad +]</b> veya <b style="color:#fff;">[Boşluk]</b> ile anında +1 ekleyebilirsiniz.
-        </div>
+    <!-- ================= ANA SAYAÇ KONTROL MERKEZİ ================= -->
+    <div class="card counter-hero">
+      <div style="font-size: 11px; font-weight: 800; color: #ef4444; letter-spacing: 1.5px; text-transform: uppercase;">
+        CANLI YAYIN ÖLÜM SAYISI
       </div>
 
-      <!-- SOL KOLON: OYUN & GÖRSEL / AVATAR AYARLARI -->
-      <div class="panel-card">
-        <div class="panel-title">
-          <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
-          Oyun & Görsel Ayarları
+      <div class="counter-num-box">
+        <div id="heroDeathCount" class="counter-giant">0</div>
+      </div>
+
+      <!-- BÜYÜK +1 BUTONU -->
+      <button id="btnHeroAdd" class="btn btn-primary-death">
+        <svg viewBox="0 0 24 24">
+          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+        </svg>
+        +1 ÖLÜM EKLE
+      </button>
+
+      <!-- HIZLI BUTONLAR -->
+      <div class="quick-btn-grid">
+        <button id="btnAdd5" class="btn btn-secondary">⚡ +5 Ekle</button>
+        <button id="btnSub1" class="btn btn-secondary">➖ -1 Düş</button>
+        <button id="btnManualSet" class="btn btn-secondary">✏️ Sayı Gir</button>
+        <button id="btnReset" class="btn btn-danger-outline">🔄 Sıfırla</button>
+      </div>
+      <div style="margin-top: 8px; font-size: 11px; color: var(--text-muted);">
+        ⌨️ Kısayol: Klavyenizden <b style="color:#fff;">[Numpad +]</b> veya <b style="color:#fff;">[Boşluk]</b> tuşuna basabilirsiniz.
+      </div>
+    </div>
+
+    <!-- ================= HIZLI OYUN SEÇİCİ ================= -->
+    <div class="game-chips-scroll">
+      <div class="chip game-chip" data-preset="elden_ring">🗡️ Elden Ring</div>
+      <div class="chip game-chip" data-preset="dark_souls">🔥 Dark Souls</div>
+      <div class="chip game-chip" data-preset="sekiro">🥷 Sekiro</div>
+      <div class="chip game-chip" data-preset="minecraft">⛏️ Minecraft</div>
+      <div class="chip game-chip" data-preset="valorant">🎯 Valorant</div>
+      <div class="chip game-chip" data-preset="cs2">💣 CS2</div>
+      <div class="chip game-chip" data-preset="cyberpunk">🌆 Cyberpunk</div>
+    </div>
+
+    <!-- ================= 2 SÜTUNLU AYARLAR ================= -->
+    <div class="grid-2col">
+
+      <!-- SOL KART: OYUN & GÖRSEL AYARLARI -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+            Oyun & Karakter Bilgisi
+          </div>
         </div>
 
-        <!-- HIZLI OYUN SEÇİCİ -->
-        <div class="form-label">Hızlı Oyun Modları (Tek Tıkla Ayarla)</div>
-        <div class="game-presets-row">
-          <div class="game-chip" data-preset="elden_ring">🗡️ Elden Ring</div>
-          <div class="game-chip" data-preset="dark_souls">🔥 Dark Souls</div>
-          <div class="game-chip" data-preset="sekiro">🥷 Sekiro</div>
-          <div class="game-chip" data-preset="minecraft">⛏️ Minecraft</div>
-          <div class="game-chip" data-preset="valorant">🎯 Valorant</div>
-          <div class="game-chip" data-preset="cs2">💣 CS2</div>
-          <div class="game-chip" data-preset="cyberpunk">🌆 Cyberpunk</div>
-        </div>
-
-        <!-- OYUN VE KARAKTER ADI -->
-        <div class="form-group">
+        <div class="form-row">
           <label class="form-label" for="gameTitleInput">Oyun Adı</label>
-          <input type="text" id="gameTitleInput" class="form-input" placeholder="Örn: ELDEN RING">
+          <input type="text" id="gameTitleInput" class="input-box" placeholder="Örn: ELDEN RING">
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-          <div class="form-group">
-            <label class="form-label" for="charNameInput">Karakter / Yayıncı Adı</label>
-            <input type="text" id="charNameInput" class="form-input" placeholder="Örn: TARNISHED">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;" class="form-row">
+          <div>
+            <label class="form-label" for="charNameInput">Karakter / Yayıncı</label>
+            <input type="text" id="charNameInput" class="input-box" placeholder="Örn: TARNISHED">
           </div>
-          <div class="form-group">
+          <div>
             <label class="form-label" for="counterLabelInput">Sayaç Başlığı</label>
-            <input type="text" id="counterLabelInput" class="form-input" placeholder="Örn: ÖLÜM SAYISI">
+            <input type="text" id="counterLabelInput" class="input-box" placeholder="Örn: ÖLÜM SAYISI">
           </div>
         </div>
 
-        <!-- BİLGİSAYARDAN GÖRSEL YÜKLEME -->
-        <div class="form-label">Kapak Resmi / Avatar Seçimi</div>
+        <!-- FOTOĞRAF YÜKLEME -->
+        <div class="form-label" style="margin-top: 10px;">Avatar / Kapak Resmi</div>
         <input type="file" id="fileUploadInput" accept="image/*" style="display: none;">
-        <div id="avatarUploadArea" class="avatar-upload-area">
-          <img id="previewThumb" class="preview-thumb" src="assets/presets/elden_ring.svg" alt="Seçili Görsel">
-          <div class="upload-text">
-            <h4>📁 Bilgisayardan Fotoğraf Yükle</h4>
-            <p>PNG, JPG, WebP veya GIF seçin (Otomatik boyutlandırılır)</p>
+        <div id="avatarUploadArea" class="upload-card-compact">
+          <img id="previewThumb" class="thumb-preview" src="assets/presets/elden_ring.svg" alt="Avatar">
+          <div class="upload-info">
+            <h5>📁 Bilgisayardan Fotoğraf Yükle</h5>
+            <p>İstediğiniz resmi seçin (PNG, JPG, WebP)</p>
           </div>
         </div>
 
-        <!-- GÖRSEL URL İLE EKLEME -->
-        <div class="form-group">
-          <div class="input-with-button">
-            <input type="text" id="imageUrlInput" class="form-input" placeholder="Veya görsel linki yapıştırın (https://...)">
-            <button id="btnApplyImageUrl" class="btn btn-secondary">Uygula</button>
+        <div class="form-row">
+          <div class="input-group">
+            <input type="text" id="imageUrlInput" class="input-box" placeholder="Veya görsel linki yapıştırın (https://...)">
+            <button id="btnApplyImageUrl" class="btn btn-secondary btn-sm">Uygula</button>
           </div>
         </div>
 
-        <!-- HAZIR AVATAR VE İKON GALERİSİ -->
-        <div class="form-label">Hazır Oyun İkonları Galerisi</div>
-        <div class="preset-grid">
-          <button class="preset-btn" data-src="assets/presets/elden_ring.svg" title="Elden Ring">
+        <!-- HAZIR İKONLAR -->
+        <div class="form-label">Hazır Oyun İkonları</div>
+        <div class="preset-icon-row">
+          <div class="preset-icon-btn preset-btn" data-src="assets/presets/elden_ring.svg" title="Elden Ring">
             <img src="assets/presets/elden_ring.svg" alt="Elden Ring">
-          </button>
-          <button class="preset-btn" data-src="assets/presets/souls_skull.svg" title="Souls Skull">
+          </div>
+          <div class="preset-icon-btn preset-btn" data-src="assets/presets/souls_skull.svg" title="Souls Skull">
             <img src="assets/presets/souls_skull.svg" alt="Souls Skull">
-          </button>
-          <button class="preset-btn" data-src="assets/presets/katana_samurai.svg" title="Sekiro Death">
+          </div>
+          <div class="preset-icon-btn preset-btn" data-src="assets/presets/katana_samurai.svg" title="Sekiro Death">
             <img src="assets/presets/katana_samurai.svg" alt="Sekiro">
-          </button>
-          <button class="preset-btn" data-src="assets/presets/cyber_skull.svg" title="Cyberpunk">
+          </div>
+          <div class="preset-icon-btn preset-btn" data-src="assets/presets/cyber_skull.svg" title="Cyberpunk">
             <img src="assets/presets/cyber_skull.svg" alt="Cyberpunk">
-          </button>
-          <button class="preset-btn" data-src="assets/presets/reaper.svg" title="Grim Reaper">
+          </div>
+          <div class="preset-icon-btn preset-btn" data-src="assets/presets/reaper.svg" title="Grim Reaper">
             <img src="assets/presets/reaper.svg" alt="Reaper">
-          </button>
-          <button class="preset-btn" data-src="assets/presets/minecraft.svg" title="Minecraft">
+          </div>
+          <div class="preset-icon-btn preset-btn" data-src="assets/presets/minecraft.svg" title="Minecraft">
             <img src="assets/presets/minecraft.svg" alt="Minecraft">
-          </button>
-          <button class="preset-btn" data-src="assets/presets/valorant.svg" title="Valorant">
+          </div>
+          <div class="preset-icon-btn preset-btn" data-src="assets/presets/valorant.svg" title="Valorant">
             <img src="assets/presets/valorant.svg" alt="Valorant">
-          </button>
-          <button class="preset-btn" data-src="assets/presets/cs2.svg" title="CS2">
+          </div>
+          <div class="preset-icon-btn preset-btn" data-src="assets/presets/cs2.svg" title="CS2">
             <img src="assets/presets/cs2.svg" alt="CS2">
-          </button>
+          </div>
         </div>
       </div>
 
-      <!-- SAĞ KOLON: TEMA, GÖRÜNÜM & SES STÜDYOSU -->
-      <div class="panel-card">
-        <div class="panel-title">
-          <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.9-1.9C9.22 19.58 10.57 20 12 20c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 15c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>
-          Tema, Görünüm & Ses Stüdyosu
+      <!-- SAĞ KART: TEMA & SES AYARLARI -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.9-1.9C9.22 19.58 10.57 20 12 20c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 15c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>
+            Tema & Görünüm
+          </div>
         </div>
 
-        <!-- DÜZEN (LAYOUT) SEÇİMİ -->
-        <div class="form-label">Overlay Kart Düzeni</div>
-        <div class="layout-selector-row">
-          <div class="layout-btn active" data-layout="horizontal">🔲 Yatay Banner</div>
-          <div class="layout-btn" data-layout="vertical">📱 Dikey Kart</div>
-          <div class="layout-btn" data-layout="compact">💊 Mini Rozet</div>
+        <div class="form-label">Kart Düzeni</div>
+        <div class="layout-opt-grid">
+          <div class="layout-opt-btn layout-btn active" data-layout="horizontal">🔲 Yatay</div>
+          <div class="layout-opt-btn layout-btn" data-layout="vertical">📱 Dikey</div>
+          <div class="layout-opt-btn layout-btn" data-layout="compact">💊 Mini Rozet</div>
         </div>
 
-        <!-- TEMA SEÇENEKLERİ -->
         <div class="form-label">Kart Teması</div>
-        <div class="theme-selector-grid" style="margin-bottom: 16px;">
-          <div class="theme-card-option active" data-theme="souls">
-            <div class="theme-color-dot" style="background: #e63946; box-shadow: 0 0 8px #e63946;"></div>
-            <div>
-              <h4>Dark Souls</h4>
-              <p>Gotik & Kan Kırmızısı</p>
-            </div>
+        <div class="theme-compact-grid">
+          <div class="theme-compact-opt theme-card-option active" data-theme="souls">
+            <h5 style="color: #ef4444;">Dark Souls</h5>
           </div>
-          <div class="theme-card-option" data-theme="cyberpunk">
-            <div class="theme-color-dot" style="background: #00f3ff; box-shadow: 0 0 8px #00f3ff;"></div>
-            <div>
-              <h4>Cyberpunk</h4>
-              <p>Neon Cyan & Glitch</p>
-            </div>
+          <div class="theme-compact-opt theme-card-option" data-theme="cyberpunk">
+            <h5 style="color: #00f3ff;">Cyberpunk</h5>
           </div>
-          <div class="theme-card-option" data-theme="glass">
-            <div class="theme-color-dot" style="background: #6366f1; box-shadow: 0 0 8px #6366f1;"></div>
-            <div>
-              <h4>Modern Glass</h4>
-              <p>Buzlu Cam & Minimal</p>
-            </div>
+          <div class="theme-compact-opt theme-card-option" data-theme="glass">
+            <h5 style="color: #a5b4fc;">Modern Glass</h5>
           </div>
-          <div class="theme-card-option" data-theme="retro">
-            <div class="theme-color-dot" style="background: #facc15; box-shadow: 0 0 8px #facc15;"></div>
-            <div>
-              <h4>Retro 8-Bit</h4>
-              <p>Piksel & Arcade</p>
-            </div>
+          <div class="theme-compact-opt theme-card-option" data-theme="retro">
+            <h5 style="color: #facc15;">Retro 8-Bit</h5>
           </div>
-          <div class="theme-card-option" data-theme="esports">
-            <div class="theme-color-dot" style="background: #ff4655; box-shadow: 0 0 8px #ff4655;"></div>
-            <div>
-              <h4>Esports Pro</h4>
-              <p>Valorant / Keskin</p>
-            </div>
+          <div class="theme-compact-opt theme-card-option" data-theme="esports">
+            <h5 style="color: #ff4655;">Esports Pro</h5>
           </div>
-          <div class="theme-card-option" data-theme="gold">
-            <div class="theme-color-dot" style="background: #fbbf24; box-shadow: 0 0 8px #fbbf24;"></div>
-            <div>
-              <h4>Midnight Gold</h4>
-              <p>Koyu Altın & Asil</p>
-            </div>
+          <div class="theme-compact-opt theme-card-option" data-theme="gold">
+            <h5 style="color: #fbbf24;">Midnight Gold</h5>
           </div>
         </div>
 
-        <!-- SES EFEKTİ VE TEST -->
-        <div class="form-group">
-          <label class="form-label" for="soundSelect">Ölüm Eklendiğinde Çalacak Ses</label>
-          <div class="input-with-button">
-            <select id="soundSelect" class="form-select">
-              <option value="souls_death">🔔 Souls Dark Gong / Çan</option>
-              <option value="retro_death">👾 8-Bit Retro Game Over</option>
-              <option value="minecraft_oof">💥 Punch / Oof Vuruşu</option>
+        <!-- SES EFEKTİ -->
+        <div class="form-row">
+          <label class="form-label" for="soundSelect">Ölüm Ses Efekti</label>
+          <div class="input-group">
+            <select id="soundSelect" class="select-box">
+              <option value="souls_death">🔔 Souls Dark Gong</option>
+              <option value="retro_death">👾 8-Bit Game Over</option>
+              <option value="minecraft_oof">💥 Punch / Oof</option>
               <option value="dramatic_boom">💣 Dramatik Sub Boom</option>
-              <option value="cyber_glitch">⚡ Cyber Glitch / Zap</option>
-              <option value="bell_chime">✨ Temiz Melodik Zil</option>
-              <option value="none">🔇 Sessiz Mod (Ses Çalma)</option>
+              <option value="cyber_glitch">⚡ Cyber Glitch</option>
+              <option value="bell_chime">✨ Melodik Zil</option>
+              <option value="none">🔇 Sessiz (Kapalı)</option>
             </select>
-            <button id="btnTestSound" class="btn btn-secondary" title="Sesi Dinle">🔊 Test Et</button>
+            <button id="btnTestSound" class="btn btn-secondary btn-sm">🔊 Dinle</button>
           </div>
         </div>
 
-        <!-- SES DÜZEYİ & ÖLÇEKLEME SLIDERLARI -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+        <!-- AYARLAR & TOGGLELAR -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 8px 0;" class="form-row">
           <div>
-            <label class="form-label" for="volumeSlider">Ses Seviyesi</label>
-            <input type="range" id="volumeSlider" class="form-input" min="0" max="1" step="0.05" value="0.8" style="padding: 4px;">
+            <label class="form-label" for="volumeSlider">Ses Düzeyi</label>
+            <input type="range" id="volumeSlider" class="input-box" min="0" max="1" step="0.05" value="0.8" style="padding: 2px;">
           </div>
           <div>
             <div style="display:flex; justify-content:space-between;">
               <label class="form-label" for="scaleSlider">Kart Boyutu</label>
-              <span id="scaleValText" style="font-size:12px; color:var(--text-muted); font-weight:700;">%100</span>
+              <span id="scaleValText" style="font-size:11px; color:var(--text-muted); font-weight:700;">%100</span>
             </div>
-            <input type="range" id="scaleSlider" class="form-input" min="60" max="150" step="5" value="100" style="padding: 4px;">
+            <input type="range" id="scaleSlider" class="input-box" min="60" max="150" step="5" value="100" style="padding: 2px;">
           </div>
         </div>
 
-        <!-- EFEKT TOGGLE SWITCHLERI -->
-        <div class="toggle-row">
-          <div class="toggle-info">
-            <h4>📳 Kart Titremesi (Shake)</h4>
-            <p>Ölüm eklendiğinde kart hafifçe sarsılır</p>
-          </div>
+        <div class="toggle-item">
+          <span>📳 Kart Titremesi (Shake)</span>
           <label class="switch">
             <input type="checkbox" id="shakeToggle" checked>
             <span class="slider"></span>
           </label>
         </div>
 
-        <div class="toggle-row">
-          <div class="toggle-info">
-            <h4>🩸 Kırmızı Ekran Parıltısı</h4>
-            <p>Ölümde ekranda sinematik kırmızı vinyet yanıp söner</p>
-          </div>
+        <div class="toggle-item">
+          <span>🩸 Kırmızı Ekran Parlaması</span>
           <label class="switch">
             <input type="checkbox" id="flashToggle" checked>
             <span class="slider"></span>
           </label>
         </div>
 
-        <div class="toggle-row">
-          <div class="toggle-info">
-            <h4>✨ Yüzen +1 Animasyonu</h4>
-            <p>Sayaçtan yukarı doğru uçan parçacık efekti</p>
-          </div>
+        <div class="toggle-item">
+          <span>✨ Yüzen +1 Animasyonu</span>
           <label class="switch">
             <input type="checkbox" id="particlesToggle" checked>
             <span class="slider"></span>
@@ -299,100 +266,101 @@
         </div>
       </div>
 
-      <!-- CANLI ÖNİZLEME PENCERESİ -->
-      <div class="panel-card" style="grid-column: 1 / -1;">
-        <div class="panel-title">
-          <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-          Canlı Overlay Kartı Önizlemesi (OBS'te görüneceği anlık durum)
-        </div>
+    </div>
 
-        <div class="preview-container">
-          <div id="previewWrapper" class="death-card-wrapper theme-souls layout-horizontal">
-            <div id="previewCard" class="death-card">
-              <div class="avatar-container">
-                <img id="previewAvatar" class="avatar-img" src="assets/presets/elden_ring.svg" alt="Önizleme">
-                <span class="avatar-badge">LIVE</span>
+    <!-- ================= CANLI ÖNİZLEME ================= -->
+    <div class="card">
+      <div class="card-header" style="margin-bottom: 8px;">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+          Canlı Overlay Kartı Önizlemesi (OBS Görüntüsü)
+        </div>
+      </div>
+
+      <div class="live-preview-box">
+        <div id="previewWrapper" class="death-card-wrapper theme-souls layout-horizontal">
+          <div id="previewCard" class="death-card">
+            <div class="avatar-container">
+              <img id="previewAvatar" class="avatar-img" src="assets/presets/elden_ring.svg" alt="Önizleme">
+              <span class="avatar-badge">LIVE</span>
+            </div>
+            <div class="info-section">
+              <div id="previewGameTitle" class="game-title">ELDEN RING</div>
+              <div id="previewCharName" class="char-name">TARNISHED</div>
+              <div class="label-pill">
+                <span id="previewCounterLabel">ÖLÜM SAYISI</span>
               </div>
-              <div class="info-section">
-                <div id="previewGameTitle" class="game-title">ELDEN RING</div>
-                <div id="previewCharName" class="char-name">TARNISHED</div>
-                <div class="label-pill">
-                  <span id="previewCounterLabel">ÖLÜM SAYISI</span>
-                </div>
-              </div>
-              <div class="counter-section">
-                <svg class="skull-icon" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12C2 15.5 3.79 18.57 6.5 20.35V22H17.5V20.35C20.21 18.57 22 15.5 22 12C22 6.48 17.52 2 12 2ZM9 11C8.17 11 7.5 10.33 7.5 9.5C7.5 8.67 8.17 8 9 8C9.83 8 10.5 8.67 10.5 9.5C10.5 10.33 9.83 11 9 11ZM15 11C14.17 11 13.5 10.33 13.5 9.5C13.5 8.67 14.17 8 15 8C15.83 8 16.5 8.67 16.5 9.5C16.5 10.33 15.83 11 15 11ZM9.5 18H8V15.5H9.5V18ZM12.75 18H11.25V15.5H12.75V18ZM16 18H14.5V15.5H16V18Z"/>
-                </svg>
-                <div id="previewCounterVal" class="counter-value">0</div>
-              </div>
+            </div>
+            <div class="counter-section">
+              <svg class="skull-icon" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12C2 15.5 3.79 18.57 6.5 20.35V22H17.5V20.35C20.21 18.57 22 15.5 22 12C22 6.48 17.52 2 12 2ZM9 11C8.17 11 7.5 10.33 7.5 9.5C7.5 8.67 8.17 8 9 8C9.83 8 10.5 8.67 10.5 9.5C10.5 10.33 9.83 11 9 11ZM15 11C14.17 11 13.5 10.33 13.5 9.5C13.5 8.67 14.17 8 15 8C15.83 8 16.5 8.67 16.5 9.5C16.5 10.33 15.83 11 15 11ZM9.5 18H8V15.5H9.5V18ZM12.75 18H11.25V15.5H12.75V18ZM16 18H14.5V15.5H16V18Z"/>
+              </svg>
+              <div id="previewCounterVal" class="counter-value">0</div>
             </div>
           </div>
         </div>
       </div>
-
     </div>
+
   </div>
 
   <!-- ================= MODALLAR ================= -->
 
   <!-- QR KOD MODALI -->
-  <div id="qrModal" class="modal-backdrop">
-    <div class="modal-box" style="text-align: center;">
-      <div class="modal-header">
-        <h3>📱 Telefondan Kontrol Et</h3>
-        <button class="modal-close">&times;</button>
+  <div id="qrModal" class="modal-overlay">
+    <div class="modal-content" style="text-align: center;">
+      <div class="modal-head">
+        <h3>📱 Telefonla Kontrol QR</h3>
+        <button class="modal-close-icon modal-close">&times;</button>
       </div>
-      <p style="font-size: 13px; color: var(--text-muted);">
-        Aşağıdaki QR kodu telefonunun kamerasıyla okutarak kumanda panelini telefondan anında kontrol edebilirsin:
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">
+        Kameranla okutarak bu paneli anında telefonunda açabilirsin:
       </p>
-      <div class="qr-canvas-wrapper">
+      <div style="background: #fff; padding: 12px; border-radius: 10px; display: inline-block;">
         <div id="qrCanvasContainer"></div>
       </div>
-      <p id="qrUrlText" style="font-size: 11px; color: var(--text-muted); word-break: break-all; margin-bottom: 16px;"></p>
+      <p id="qrUrlText" style="font-size: 10px; color: var(--text-muted); word-break: break-all; margin: 10px 0;"></p>
       <button class="btn btn-secondary modal-close-btn" style="width: 100%;">Kapat</button>
     </div>
   </div>
 
-  <!-- SIFIRLAMA ONAY MODALI -->
-  <div id="resetModal" class="modal-backdrop">
-    <div class="modal-box" style="text-align: center;">
-      <div class="modal-header">
+  <!-- SIFIRLAMA ONAL MODALI -->
+  <div id="resetModal" class="modal-overlay">
+    <div class="modal-content" style="text-align: center;">
+      <div class="modal-head">
         <h3>⚠️ Sayacı Sıfırla</h3>
-        <button class="modal-close">&times;</button>
+        <button class="modal-close-icon modal-close">&times;</button>
       </div>
-      <p style="font-size: 14px; color: #f1f5f9; margin: 14px 0 20px 0;">
-        Ölüm sayısını <b>0</b> olarak sıfırlamak istediğinize emin misiniz? Bu işlem geri alınamaz.
+      <p style="font-size: 13px; color: #f1f5f9; margin: 12px 0 16px 0;">
+        Ölüm sayısını <b>0</b> olarak sıfırlamak istediğinize emin misiniz?
       </p>
-      <div style="display: flex; gap: 10px;">
+      <div style="display: flex; gap: 8px;">
         <button class="btn btn-secondary modal-close-btn" style="flex: 1;">İptal</button>
         <button id="btnConfirmReset" class="btn btn-danger-outline" style="flex: 1; background: #ef4444; color: #fff;">Evet, Sıfırla</button>
       </div>
     </div>
   </div>
 
-  <!-- MANUEL SAYI GİRİŞ MODALI -->
-  <div id="manualModal" class="modal-backdrop">
-    <div class="modal-box">
-      <div class="modal-header">
+  <!-- MANUEL SAYI GİRİŞİ -->
+  <div id="manualModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-head">
         <h3>✏️ Manuel Ölüm Sayısı Gir</h3>
-        <button class="modal-close">&times;</button>
+        <button class="modal-close-icon modal-close">&times;</button>
       </div>
-      <div class="form-group" style="margin: 16px 0;">
+      <div class="form-row" style="margin: 12px 0;">
         <label class="form-label" for="manualInput">Yeni Ölüm Sayısı</label>
-        <input type="number" id="manualInput" class="form-input" min="0" style="font-size: 20px; font-weight: 700;">
+        <input type="number" id="manualInput" class="input-box" min="0" style="font-size: 18px; font-weight: 700;">
       </div>
-      <div style="display: flex; gap: 10px;">
+      <div style="display: flex; gap: 8px;">
         <button class="btn btn-secondary modal-close-btn" style="flex: 1;">İptal</button>
         <button id="btnConfirmManual" class="btn btn-accent" style="flex: 1;">Kaydet</button>
       </div>
     </div>
   </div>
 
-  <!-- TOAST BİLDİRİMİ -->
-  <div id="toast" class="toast-msg"></div>
+  <div id="toast" class="toast"></div>
 
-  <!-- SCRİPTLER -->
   <script src="js/audio.js"></script>
   <script src="js/sync.js"></script>
   <script src="js/admin.js"></script>

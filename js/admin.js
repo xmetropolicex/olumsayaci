@@ -479,7 +479,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.modal-close, .modal-close-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            const modal = e.target.closest('.modal-backdrop');
+            const modal = e.target.closest('.modal-overlay') || e.target.closest('.modal-backdrop');
             closeModal(modal);
         });
     });

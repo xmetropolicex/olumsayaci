@@ -23,7 +23,7 @@ class SyncEngine {
             gameTitle: 'ELDEN RING',
             characterName: 'Tarnished',
             deaths: 0,
-            avatarUrl: 'assets/presets/elden_ring.png',
+            avatarUrl: 'assets/presets/elden_ring.svg',
             theme: 'souls', // souls, cyberpunk, glass, retro, esports, gold
             layout: 'horizontal', // horizontal, vertical, compact, boss
             accentColor: '#e63946',
@@ -80,6 +80,9 @@ class SyncEngine {
             const saved = localStorage.getItem(this.storageKey);
             if (saved) {
                 const parsed = JSON.parse(saved);
+                if (parsed.avatarUrl && parsed.avatarUrl.endsWith('.png')) {
+                    parsed.avatarUrl = parsed.avatarUrl.replace('.png', '.svg');
+                }
                 this.state = { ...this.state, ...parsed };
             }
         } catch (e) {
