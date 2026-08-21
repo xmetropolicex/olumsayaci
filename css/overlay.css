@@ -559,12 +559,17 @@ body.overlay-mode {
 
 /* ================= DÜZENLER (LAYOUTS) ================= */
 
-/* Dikey Kart (Vertical) */
+/* 1. Yatay Standart Kart (Horizontal) */
+.layout-horizontal .death-card {
+  padding: 12px 18px 10px 14px;
+}
+
+/* 2. Dikey Kart (Vertical) */
 .layout-vertical .death-card {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 16px 20px;
+  padding: 22px 20px 16px 20px;
   gap: 10px;
   min-width: 150px;
 }
@@ -594,29 +599,42 @@ body.overlay-mode {
   font-size: 46px;
 }
 
-/* Kompakt Rozet */
+/* 3. Kompakt Rozet (Compact Pill) */
+.layout-compact .card-top-tag {
+  display: none !important; /* Kompakt hap şeklinde rozet gizlenir, metinler ferah kalır */
+}
 .layout-compact .death-card {
-  padding: 4px 10px 4px 6px;
-  gap: 8px;
+  padding: 6px 14px 6px 8px;
+  gap: 10px;
   border-radius: 30px;
 }
 .layout-compact .avatar-container {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
 }
 .layout-compact .game-title {
-  font-size: 11px;
-  max-width: 100px;
+  font-size: 12px;
+  max-width: 120px;
+  line-height: 1.15;
 }
 .layout-compact .char-name {
-  font-size: 10px;
+  font-size: 10.5px;
+  margin-top: 1px;
 }
 .layout-compact .counter-section {
-  padding-left: 6px;
+  padding-left: 8px;
+  min-width: 36px;
 }
 .layout-compact .counter-value {
-  font-size: 24px;
+  font-size: 26px;
+}
+
+/* 4. Boss Bar Düzeni (Boss) */
+.layout-boss .death-card {
+  padding: 12px 24px;
+  border-radius: 8px;
+  min-width: 300px;
 }
 
 /* ================= ANİMASYONLAR ================= */
