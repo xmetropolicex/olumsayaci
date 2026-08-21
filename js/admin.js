@@ -34,10 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const imageUrlInput = document.getElementById('imageUrlInput');
     const btnApplyImageUrl = document.getElementById('btnApplyImageUrl');
 
-    // Ses & Efektler
-    const soundSelect = document.getElementById('soundSelect');
-    const btnTestSound = document.getElementById('btnTestSound');
-    const volumeSlider = document.getElementById('volumeSlider');
+    // Efektler & Boyut
     const shakeToggle = document.getElementById('shakeToggle');
     const flashToggle = document.getElementById('flashToggle');
     const particlesToggle = document.getElementById('particlesToggle');
@@ -118,8 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
             el.classList.toggle('active', el.dataset.layout === state.layout);
         });
 
-        // Ses & Efektler
-        if (soundSelect) soundSelect.value = state.soundEffect || 'souls_death';
+        // Efektler
         if (shakeToggle) shakeToggle.checked = state.shakeEffect !== false;
         if (flashToggle) flashToggle.checked = state.flashEffect !== false;
         if (particlesToggle) particlesToggle.checked = state.particlesEnabled !== false;
@@ -314,13 +310,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Hazır Oyun Butonları (Tek Tıkla Oyun Modu)
     const gamePresets = {
-        'elden_ring': { title: 'ELDEN RING', char: 'TARNISHED', icon: 'assets/presets/elden_ring.svg', theme: 'souls', sound: 'souls_death' },
-        'dark_souls': { title: 'DARK SOULS', char: 'ASHLEN ONE', icon: 'assets/presets/souls_skull.svg', theme: 'souls', sound: 'souls_death' },
-        'sekiro': { title: 'SEKIRO', char: 'WOLF', icon: 'assets/presets/katana_samurai.svg', theme: 'souls', sound: 'souls_death' },
-        'minecraft': { title: 'MINECRAFT', char: 'STEVE', icon: 'assets/presets/minecraft.svg', theme: 'retro', sound: 'minecraft_oof' },
-        'valorant': { title: 'VALORANT', char: 'RADIANT', icon: 'assets/presets/valorant.svg', theme: 'esports', sound: 'dramatic_boom' },
-        'cs2': { title: 'COUNTER-STRIKE 2', char: 'TERRORIST', icon: 'assets/presets/cs2.svg', theme: 'esports', sound: 'dramatic_boom' },
-        'cyberpunk': { title: 'CYBERPUNK 2077', char: 'V', icon: 'assets/presets/cyber_skull.svg', theme: 'cyberpunk', sound: 'cyber_glitch' }
+        'elden_ring': { title: 'ELDEN RING', char: 'TARNISHED', icon: 'assets/presets/elden_ring.svg', theme: 'souls' },
+        'dark_souls': { title: 'DARK SOULS', char: 'ASHLEN ONE', icon: 'assets/presets/souls_skull.svg', theme: 'souls' },
+        'sekiro': { title: 'SEKIRO', char: 'WOLF', icon: 'assets/presets/katana_samurai.svg', theme: 'souls' },
+        'minecraft': { title: 'MINECRAFT', char: 'STEVE', icon: 'assets/presets/minecraft.svg', theme: 'retro' },
+        'valorant': { title: 'VALORANT', char: 'RADIANT', icon: 'assets/presets/valorant.svg', theme: 'esports' },
+        'cs2': { title: 'COUNTER-STRIKE 2', char: 'TERRORIST', icon: 'assets/presets/cs2.svg', theme: 'esports' },
+        'cyberpunk': { title: 'CYBERPUNK 2077', char: 'V', icon: 'assets/presets/cyber_skull.svg', theme: 'cyberpunk' }
     };
 
     document.querySelectorAll('.game-chip').forEach(chip => {
@@ -332,8 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     gameTitle: preset.title,
                     characterName: preset.char,
                     avatarUrl: preset.icon,
-                    theme: preset.theme,
-                    soundEffect: preset.sound
+                    theme: preset.theme
                 });
                 showToast(`${preset.title} Moduna Geçildi!`);
             }
@@ -345,7 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
         card.addEventListener('click', () => {
             const theme = card.dataset.theme;
             sync.updateState({ theme });
-            showToast(`Tema: ${card.querySelector('h4').textContent}`);
+            showToast(`Tema: ${card.querySelector('h4, h5').textContent}`);
         });
     });
 
@@ -357,22 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ================= SES & EFEKTLER =================
-    soundSelect.addEventListener('change', (e) => {
-        sync.updateState({ soundEffect: e.target.value });
-    });
-
-    btnTestSound.addEventListener('click', () => {
-        if (window.soundManager) {
-            window.soundManager.play(soundSelect.value);
-        }
-    });
-
-    volumeSlider.addEventListener('input', (e) => {
-        const vol = parseFloat(e.target.value);
-        if (window.soundManager) window.soundManager.setVolume(vol);
-    });
-
+    // ================= EFEKTLER =================
     shakeToggle.addEventListener('change', (e) => {
         sync.updateState({ shakeEffect: e.target.checked });
     });

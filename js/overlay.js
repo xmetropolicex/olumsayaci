@@ -98,12 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
             flashOverlay.classList.remove('death-flash-active');
             void flashOverlay.offsetWidth;
             flashOverlay.classList.add('death-flash-active');
-        }
-
-        // 5. Ses Efekti
-        if (state.soundEnabled && window.soundManager) {
-            window.soundManager.play(state.soundEffect || 'souls_death', state.customSoundUrl);
-        }
     }
 
     function spawnFloatingDelta(delta) {

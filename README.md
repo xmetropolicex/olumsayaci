@@ -16,8 +16,7 @@ Yayıncılar için özel olarak tasarlanmış; şık kart tasarımlarına sahip,
   - 👾 **Retro 8-Bit Arcade** (Piksel nostalji)
   - 🏆 **Esports Pro / Valorant** (Keskin çizgiler)
   - 👑 **Midnight Gold** (Koyu altın)
-- 🔔 **Dahili Web Ses Efektleri**: Ekstra dosya indirmeden çalışan Dark Souls Çanı, Retro Game Over, Minecraft Punch, Sub Boom, Glitch vb.
-- 💥 **Canlı Animasyonlar**: Ölüm eklendiğinde sayaç büyümesi, kart titremesi (shake), yükselen `+1` parçacıkları ve kırmızı ekran parıltısı.
+- 💥 **Canlı Animasyonlar**: Ölüm eklendiğinde sayaç büyümesi ve yükselen `+1` parçacıkları.
 - ⌨️ **Klavye Kısayolları**: `[Numpad +]`, `[Numpad -]` veya `[Boşluk]` tuşları.
 
 ---
@@ -56,13 +55,13 @@ Sayacı Netlify'a ücretsiz yükleyerek telefonundan kontrol etmek çok kolaydı
 ## 🕹️ 3. Hazır Oyun Modları
 
 Panelin üst kısmındaki hızlı oyun çiplerine tıklayarak tek dokunuşla oyun ayarlarını değiştirebilirsiniz:
-- **Elden Ring** ➔ Altın halkalar & Souls teması & Çan sesi
+- **Elden Ring** ➔ Altın halkalar & Souls teması
 - **Dark Souls** ➔ Gotik kuru kafa & Kan kırmızısı tema
 - **Sekiro** ➔ Ölüm kanjisi & Samuray teması
-- **Minecraft** ➔ Piksel kalp & Retro piksel tema & Oof sesi
+- **Minecraft** ➔ Piksel kalp & Retro piksel tema
 - **Valorant** ➔ Radiant ikon & Esports teması
 - **Counter-Strike 2** ➔ Taktiksel nişangah & Esports teması
-- **Cyberpunk 2077** ➔ Sibernetik neon & Glitch ses efekti
+- **Cyberpunk 2077** ➔ Sibernetik neon teması
 
 ---
 
@@ -76,7 +75,6 @@ c:\olum sayaci\
 │   ├── style.css       # Admin paneli modern koyu tema stilleri
 │   └── overlay.css     # OBS saydam kart ve animasyon stilleri
 ├── js/
-│   ├── audio.js        # Dahili Web Audio ses sentezleyici
 │   ├── sync.js         # BroadcastChannel + MQTT WebSocket hibrit senkronizasyon motoru
 │   └── overlay.js      # Overlay animasyon yöneticisi
 ├── assets/
